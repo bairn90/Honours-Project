@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.brianmsurgenor.honoursproject" >
 
+    <permission android:name="com.brianmsurgenor.honoursproject.provider.READWRITE" />
+
+    <uses-permission android:name="com.brianmsurgenor.honoursproject.provider.READWRITE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,6 +19,27 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".SetupUserActivity"
+            android:label="@string/title_activity_setup_user" />
+        <activity
+            android:name=".SetupPetActivity"
+            android:label="@string/title_activity_setup_pet" />
+
+        <provider
+            android:name=".DBProvider"
+            android:authorities="com.brianmsurgenor.honoursproject.provider"
+            android:exported="true"
+            android:readPermission="com.brianmsurgenor.honoursproject.READWRITE" />
+
+        <activity
+            android:name=".MealEntryActivity"
+            android:label="@string/title_activity_meal_entry" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

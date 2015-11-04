@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- group with single selected item so only one item is highlighted in the nav menu -->
+    <group android:checkableBehavior="single">
+        <item
+            android:title="Main Menu">
+            <menu>
+                <item
+                    android:id="@+id/MyPet"
+                    android:icon="@drawable/pets10"
+                    android:title="My Pet" />
+                <item
+                    android:id="@+id/Pedometer"
+                    android:icon="@drawable/ic_directions_walk_black_24dp"
+                    android:title="Pedometer" />
+                <item
+                    android:id="@+id/Trophies"
+                    android:icon="@drawable/ic_action_achievement"
+                    android:title="My Trophies" />
+            </menu>
+        </item>
+        <item
+            android:id="@+id/Games"
+            android:icon="@drawable/ic_action_joypad"
+            android:title="Pet Games"/>
+        <item
+            android:title="Food Diary">
+            <menu>
+                <item
+                    android:id="@+id/FoodDiary"
+                    android:icon="@drawable/ic_action_calendar_day"
+                    android:title="My Food Diary"/>
+                <item
+                    android:id="@+id/AddMeal"
+                    android:icon="@drawable/ic_local_dining_black_24dp"
+                    android:title="Add Meal"/>
+            </menu>
+        </item>
+        <item android:title="Settings">
+            <menu>
+                <item android:id="@+id/Colour"
+                    android:icon="@drawable/ic_action_brush"
+                    android:title="Customise My Colours"/>
+                <item
+                    android:id="@+id/Settings"
+                    android:icon="@drawable/ic_settings_black_24dp"
+                    android:title="All Settings" />
+                <item android:id="@+id/Delete"
+                    android:icon="@drawable/ic_delete_black_24dp"
+                    android:title="Delete My Data"/>
+
+            </menu>
+        </item>
+    </group>
+</menu>
