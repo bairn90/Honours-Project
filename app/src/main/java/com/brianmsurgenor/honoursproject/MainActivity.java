@@ -16,7 +16,8 @@ public class MainActivity extends BaseActivity
 
     private ContentResolver mContentResolver;
     private Cursor mCursor;
-
+    private static TabLayout tabs;
+    private int customColour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,21 +25,31 @@ public class MainActivity extends BaseActivity
 
         mContentResolver = getContentResolver();
 
-        if (startupCheck()) {
-            //Set up the users 'home screen'
-        } else {
-            //Send the user to the first set up screen
-            MainActivity.this.finish();
-            startActivity(new Intent(MainActivity.this, SetupUserActivity.class));
-        }
-
-        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs = (TabLayout) findViewById(R.id.tabs);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         TabsPagerAdapter adapter = new TabsPagerAdapter(getSupportFragmentManager());
 
         pager.setAdapter(adapter);
         tabs.setupWithViewPager(pager);
 
+        if (startupCheck()) {
+            Bundle tabData = getIntent().getExtras();
+            if(tabData != null) {
+                pager.setCurrentItem(tabData.getInt("tab"));
+            }
+
+            if(customColour != 0) {
+                changeTabsColour(customColour);
+            }
+        } else {
+            //Send the user to the first set up screen
+            MainActivity.this.finish();
+            startActivity(new Intent(MainActivity.this, SetupUserActivity.class));
+        }
+    }
+
+    public static void changeTabsColour(int colour) {
+        tabs.setBackgroundColor(colour);
     }
 
     private boolean startupCheck() {
@@ -47,7 +58,7 @@ public class MainActivity extends BaseActivity
 
         //If there is data retrieve it otherwise return false to go to user setup
         if (mCursor.moveToFirst()) {
-
+            customColour = mCursor.getInt(mCursor.getColumnIndex(UserContract.Columns.CUSTOM_COLOUR));
 
             return true;
         } else {

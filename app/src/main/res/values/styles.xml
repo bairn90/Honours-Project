@@ -2,18 +2,17 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--<item name="colorPrimary">@color/toolbar</item>-->
         <item name="colorPrimaryDark">@color/topbar</item>
     </style>
 
-    <style name="Theme.Base" parent="AppTheme">
-        <item name="colorPrimary">@color/primaryBackground</item>
-        <item name="colorPrimaryDark">@color/toolbar</item>
-        <item name="colorAccent">@color/topbar</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/md_blue_400</item>
-    </style>
+    <!--<style name="Theme.Base" parent="AppTheme">-->
+        <!--<item name="colorPrimary">@color/primaryBackground</item>-->
+        <!--<item name="colorPrimaryDark">@color/toolbar</item>-->
+        <!--&lt;!&ndash;<item name="colorAccent">@color/topbar</item>&ndash;&gt;-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <!--<item name="android:windowBackground">@color/md_blue_400</item>-->
+    <!--</style>-->
 
     <style name="ActionBarThemeOverlay" parent="">
         <item name="android:textColorPrimary">@color/primaryTextColor</item>

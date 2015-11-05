@@ -17,14 +17,12 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        position++;
-
         switch (position) {
-            case 1:
+            case 0:
                 return PetFragment.newInstance();
-            case 2:
+            case 1:
                 return PedometerFragment.newInstance();
-            case 3:
+            case 2:
                 return TrophyFragment.newInstance();
             default:
                 return null;
@@ -39,14 +37,12 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
 
-        position++;
-
         switch (position) {
-            case 1:
+            case 0:
                 return "My Pet";
-            case 2:
+            case 1:
                 return "Pedometer";
-            case 3:
+            case 2:
                 return "My Trophies";
             default:
                 return null;

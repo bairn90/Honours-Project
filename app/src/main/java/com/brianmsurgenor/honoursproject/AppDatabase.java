@@ -35,8 +35,9 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + UserContract.Columns.GENDER + " TEXT NOT NULL,"
                 + UserContract.Columns.HEIGHT + " TEXT,"
                 + UserContract.Columns.WEIGHT + " TEXT,"
-                + UserContract.Columns.PETNAME + " TEXT,"
-                + UserContract.Columns.PETTYPE + " TEXT)");
+                + UserContract.Columns.PET_NAME + " TEXT,"
+                + UserContract.Columns.PET_TYPE + " TEXT,"
+                + UserContract.Columns.CUSTOM_COLOUR + " INTEGER)");
 
         db.execSQL("CREATE TABLE " + Tables.MEAL_DATE + "("
                 + MealDateContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"

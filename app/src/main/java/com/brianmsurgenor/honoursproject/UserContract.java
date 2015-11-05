@@ -15,8 +15,9 @@ public class UserContract {
         String GENDER = "gender";
         String HEIGHT = "height";
         String WEIGHT = "weight";
-        String PETNAME = "pet_name";
-        String PETTYPE = "pet_type";
+        String PET_NAME = "pet_name";
+        String PET_TYPE = "pet_type";
+        String CUSTOM_COLOUR = "customer_colour";
     }
 
     public static final String CONTENT_AUTHORITY = "com.brianmsurgenor.honoursproject.provider";

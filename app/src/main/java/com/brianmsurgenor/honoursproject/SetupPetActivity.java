@@ -16,7 +16,7 @@ public class SetupPetActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup_pet);
-        activateToolbar();
+        activateToolbar("Choose your pet");
 
         txtPetName = (TextView) findViewById(R.id.petnameSetup);
         txtPetType = (TextView) findViewById(R.id.petType);
@@ -36,8 +36,8 @@ public class SetupPetActivity extends BaseActivity {
         petType = txtPetType.getText().toString();
 
         ContentValues values = new ContentValues();
-        values.put(UserContract.Columns.PETNAME, petName);
-        values.put(UserContract.Columns.PETTYPE, petType);
+        values.put(UserContract.Columns.PET_NAME, petName);
+        values.put(UserContract.Columns.PET_TYPE, petType);
 
         mContentResolver.update(UserContract.URI_TABLE, values, null, null);
 
