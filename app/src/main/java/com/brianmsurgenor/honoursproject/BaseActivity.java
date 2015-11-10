@@ -172,6 +172,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setBackgroundColor(colour);
         findViewById(R.id.navHeader).setBackgroundColor(colour);
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(colour);
         }

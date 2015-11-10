@@ -19,11 +19,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return PetFragment.newInstance();
+                return new PetFragment();
             case 1:
-                return PedometerFragment.newInstance();
+                return new PedometerFragment();
             case 2:
-                return TrophyFragment.newInstance();
+                return new TrophyFragment();
             default:
                 return null;
         }

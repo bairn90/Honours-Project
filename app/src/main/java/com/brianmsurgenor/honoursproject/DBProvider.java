@@ -21,6 +21,9 @@ public class DBProvider extends ContentProvider {
     private static final int USER = 100;
     private static final int USER_ID = 101;
 
+    private static final int TROPHY = 200;
+    private static final int TROPHY_ID = 201;
+
     private static final int MEAL_DATE = 300;
     private static final int MEAL_DATE_ID = 301;
 
@@ -35,6 +38,10 @@ public class DBProvider extends ContentProvider {
         String authority = UserContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, "user", USER);
         matcher.addURI(authority, "user/*", USER_ID);
+
+        authority = TrophyContract.CONTENT_AUTHORITY;
+        matcher.addURI(authority, "trophies", TROPHY);
+        matcher.addURI(authority, "trophies/*", TROPHY_ID);
 
         authority = MealDateContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, "meal_date", MEAL_DATE);
@@ -68,6 +75,10 @@ public class DBProvider extends ContentProvider {
                 return UserContract.User.CONTENT_TYPE;
             case USER_ID:
                 return UserContract.User.CONTENT_ITEM_TYPE;
+            case TROPHY:
+                return TrophyContract.Trophy.CONTENT_TYPE;
+            case TROPHY_ID:
+                return TrophyContract.Trophy.CONTENT_ITEM_TYPE;
             case MEAL_DATE:
                 return MealDateContract.MealDate.CONTENT_TYPE;
             case MEAL_DATE_ID:
@@ -96,6 +107,15 @@ public class DBProvider extends ContentProvider {
                 queryBuilder.setTables(AppDatabase.Tables.USER);
                 String userID = UserContract.User.getUserID(uri);
                 queryBuilder.appendWhere(BaseColumns._ID + "=" + userID);
+                break;
+
+            case TROPHY:
+                queryBuilder.setTables(AppDatabase.Tables.TROPHIES);
+                break;
+            case TROPHY_ID:
+                queryBuilder.setTables(AppDatabase.Tables.TROPHIES);
+                String trophyID = TrophyContract.Trophy.getTrophyID(uri);
+                queryBuilder.appendWhere(BaseColumns._ID + "=" + trophyID);
                 break;
 
             case MEAL_DATE:
@@ -132,6 +152,9 @@ public class DBProvider extends ContentProvider {
             case USER:
                 long lRecordID = db.insertOrThrow(AppDatabase.Tables.USER,null,values);
                 return UserContract.User.buildUserUri(String.valueOf(lRecordID));
+            case TROPHY:
+                long tRecordID = db.insertOrThrow(AppDatabase.Tables.TROPHIES,null,values);
+                return TrophyContract.Trophy.buildTrophyUri(String.valueOf(tRecordID));
             case MEAL_DATE:
                 long dRecordID = db.insertOrThrow(AppDatabase.Tables.MEAL_DATE,null,values);
                 return MealDateContract.MealDate.buildMealDateUri(String.valueOf(dRecordID));
@@ -157,6 +180,14 @@ public class DBProvider extends ContentProvider {
                 selectionCriteria = BaseColumns._ID + "=" + userID
                         + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
                 return db.update(AppDatabase.Tables.USER, values, selectionCriteria, selectionArgs);
+
+            case TROPHY:
+                return db.update(AppDatabase.Tables.USER, values, selection, selectionArgs);
+            case TROPHY_ID:
+                String trophyID = TrophyContract.Trophy.getTrophyID(uri);
+                selectionCriteria = BaseColumns._ID + "=" + trophyID
+                        + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
+                return db.update(AppDatabase.Tables.TROPHIES, values, selectionCriteria, selectionArgs);
 
             case MEAL_DATE:
                 return db.update(AppDatabase.Tables.USER, values, selection, selectionArgs);
@@ -195,6 +226,12 @@ public class DBProvider extends ContentProvider {
             case USER_ID:
                 String userID = UserContract.User.getUserID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + userID
+                        + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
+                return db.delete(AppDatabase.Tables.USER, selectionCriteria, selectionArgs);
+
+            case TROPHY_ID:
+                String trophyID = TrophyContract.Trophy.getTrophyID(uri);
+                selectionCriteria = BaseColumns._ID + "=" + trophyID
                         + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
                 return db.delete(AppDatabase.Tables.USER, selectionCriteria, selectionArgs);
 

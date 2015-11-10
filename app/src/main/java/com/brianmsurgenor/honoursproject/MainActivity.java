@@ -2,22 +2,22 @@ package com.brianmsurgenor.honoursproject;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-public class MainActivity extends BaseActivity
-        implements PetFragment.OnFragmentInteractionListener,
-        PedometerFragment.OnFragmentInteractionListener,
-        TrophyFragment.OnFragmentInteractionListener {
+public class MainActivity extends BaseActivity {
 
     private ContentResolver mContentResolver;
     private Cursor mCursor;
+    private static FloatingActionButton feedMe;
     private static TabLayout tabs;
     private int customColour;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +25,7 @@ public class MainActivity extends BaseActivity
 
         mContentResolver = getContentResolver();
 
+        feedMe = (FloatingActionButton) findViewById(R.id.feedMe);
         tabs = (TabLayout) findViewById(R.id.tabs);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         TabsPagerAdapter adapter = new TabsPagerAdapter(getSupportFragmentManager());
@@ -49,6 +50,7 @@ public class MainActivity extends BaseActivity
     }
 
     public static void changeTabsColour(int colour) {
+        feedMe.setBackgroundTintList(ColorStateList.valueOf(colour));
         tabs.setBackgroundColor(colour);
     }
 
@@ -70,8 +72,4 @@ public class MainActivity extends BaseActivity
         startActivity(new Intent(MainActivity.this, MealEntryActivity.class));
     }
 
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 }

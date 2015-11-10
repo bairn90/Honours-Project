@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.LinkedList;
+
 public class SetupPetActivity extends BaseActivity {
 
     private TextView txtPetName, txtPetType;
     private ContentResolver mContentResolver;
+    private LinkedList<String> trophyNames, trophyDescriptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,19 @@ public class SetupPetActivity extends BaseActivity {
         values.put(UserContract.Columns.PET_TYPE, petType);
 
         mContentResolver.update(UserContract.URI_TABLE, values, null, null);
+
+        Trophies setupTrophies = new Trophies();
+        trophyNames = setupTrophies.getTrophyNames();
+        trophyDescriptions = setupTrophies.getTrophyDescriptions();
+
+        for(int i=0;i<trophyNames.size();i++) {
+            ContentValues trophyValues = new ContentValues();
+            trophyValues.put(TrophyContract.Columns.TROPHY_NAME,trophyNames.get(i));
+            trophyValues.put(TrophyContract.Columns.TROPHY_DESCRIPTION,trophyDescriptions.get(i));
+            trophyValues.put(TrophyContract.Columns.ACHIEVED,0);
+
+            mContentResolver.insert(TrophyContract.URI_TABLE,trophyValues);
+        }
 
         startActivity(new Intent(SetupPetActivity.this,MainActivity.class));
     }

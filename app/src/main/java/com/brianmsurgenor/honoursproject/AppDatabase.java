@@ -18,6 +18,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         String USER = "user";
         String MEAL_DATE = "meal_date";
         String MEAL = "meal";
+        String TROPHIES = "trophies";
     }
 
 
@@ -52,6 +53,12 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + MealContract.Columns.MEAL_DATE + " TEXT NOT NULL,"
                 + "FOREIGN KEY(" + MealContract.Columns.MEAL_DATE + ") "
                 + "REFERENCES " + Tables.MEAL_DATE + "(" + MealDateContract.Columns.MEAL_DATE + ") )");
+
+        db.execSQL("CREATE TABLE " + Tables.TROPHIES + "("
+                + TrophyContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + TrophyContract.Columns.TROPHY_NAME + " TEXT NOT NULL,"
+                + TrophyContract.Columns.TROPHY_DESCRIPTION + " TEXT NOT NULL,"
+                + TrophyContract.Columns.ACHIEVED + " INTEGER NOT NULL)");
     }
 
 
