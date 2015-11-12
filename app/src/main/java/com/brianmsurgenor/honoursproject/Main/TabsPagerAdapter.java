@@ -1,8 +1,12 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.Main;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.brianmsurgenor.honoursproject.Pedometer.PedometerFragment;
+import com.brianmsurgenor.honoursproject.Pet.PetFragment;
+import com.brianmsurgenor.honoursproject.Trophy.TrophyFragment;
 
 /**
  * Created by Brian on 01/11/2015.

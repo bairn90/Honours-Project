@@ -1,16 +1,20 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.Trophy;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
+import com.brianmsurgenor.honoursproject.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +70,7 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
             viewHolder.imgThumbnail.setColorFilter(Color.argb(150, 200, 200, 200));
         }
 
-        viewHolder.imgThumbnail.setOnClickListener(new View.OnClickListener() {
+        viewHolder.trophyHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -91,9 +95,11 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
 
         public ImageView imgThumbnail;
         public TextView trophyName;
+        public CardView trophyHolder;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            trophyHolder = (CardView) itemView.findViewById(R.id.cardView_Trophy);
             trophyName = (TextView) itemView.findViewById(R.id.trophyName);
             imgThumbnail = (ImageView) itemView.findViewById(R.id.trophyImage);
         }

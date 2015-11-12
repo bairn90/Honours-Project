@@ -1,4 +1,4 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.Database;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -9,6 +9,11 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+
+import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
+import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
+import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
+import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 
 /**
  * Created by Brian on 30/10/2015.

@@ -1,4 +1,4 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.CommonBaseClasses;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -18,6 +18,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
+import com.brianmsurgenor.honoursproject.FoodDiary.FoodDiaryActivity;
+import com.brianmsurgenor.honoursproject.FoodDiary.MealEntryActivity;
+import com.brianmsurgenor.honoursproject.Main.MainActivity;
+import com.brianmsurgenor.honoursproject.R;
+import com.brianmsurgenor.honoursproject.Settings.SettingsActivity;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 

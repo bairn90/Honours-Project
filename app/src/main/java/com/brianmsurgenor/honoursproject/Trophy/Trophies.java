@@ -1,4 +1,4 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.Trophy;
 
 import java.util.LinkedList;
 

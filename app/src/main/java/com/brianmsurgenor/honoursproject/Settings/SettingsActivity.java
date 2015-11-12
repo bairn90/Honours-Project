@@ -1,7 +1,10 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.Settings;
 
 import android.content.ContentResolver;
 import android.os.Bundle;
+
+import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
+import com.brianmsurgenor.honoursproject.R;
 
 public class SettingsActivity extends BaseActivity {
 

@@ -1,8 +1,12 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.Database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
+import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
+import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
+import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 
 /**
  * Created by Brian on 30/10/2015.

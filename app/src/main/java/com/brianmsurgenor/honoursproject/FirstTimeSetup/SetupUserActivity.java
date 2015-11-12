@@ -1,4 +1,4 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.FirstTimeSetup;
 
 import android.app.DatePickerDialog;
 import android.content.ContentResolver;
@@ -12,6 +12,10 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
+import com.brianmsurgenor.honoursproject.R;
+import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 
 public class SetupUserActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener {
 

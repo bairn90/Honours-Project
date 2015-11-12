@@ -1,6 +1,9 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.FoodDiary;
 
 import android.os.Bundle;
+
+import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
+import com.brianmsurgenor.honoursproject.R;
 
 public class MealEntryActivity extends BaseActivity {
 

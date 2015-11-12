@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".Main.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,28 +21,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SetupUserActivity"
+            android:name=".FirstTimeSetup.SetupUserActivity"
             android:label="@string/title_activity_setup_user" />
         <activity
-            android:name=".SetupPetActivity"
+            android:name=".FirstTimeSetup.SetupPetActivity"
             android:label="@string/title_activity_setup_pet" />
 
         <provider
-            android:name=".DBProvider"
+            android:name=".Database.DBProvider"
             android:authorities="com.brianmsurgenor.honoursproject.provider"
             android:exported="true"
             android:readPermission="com.brianmsurgenor.honoursproject.READWRITE" />
 
         <activity
-            android:name=".MealEntryActivity"
+            android:name=".FoodDiary.MealEntryActivity"
             android:label="@string/title_activity_meal_entry" >
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Settings.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name=".FoodDiaryActivity"
+            android:name=".FoodDiary.FoodDiaryActivity"
             android:label="@string/title_activity_food_diary" >
         </activity>
     </application>

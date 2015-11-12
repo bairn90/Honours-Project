@@ -1,4 +1,4 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.FirstTimeSetup;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -6,6 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
+import com.brianmsurgenor.honoursproject.Main.MainActivity;
+import com.brianmsurgenor.honoursproject.R;
+import com.brianmsurgenor.honoursproject.Trophy.Trophies;
+import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
+import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 
 import java.util.LinkedList;
 

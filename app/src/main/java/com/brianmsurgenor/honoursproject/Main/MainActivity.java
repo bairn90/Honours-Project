@@ -1,4 +1,4 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.Main;
 
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -9,6 +9,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
+import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
+import com.brianmsurgenor.honoursproject.FirstTimeSetup.SetupUserActivity;
+import com.brianmsurgenor.honoursproject.FoodDiary.MealEntryActivity;
+import com.brianmsurgenor.honoursproject.R;
 
 public class MainActivity extends BaseActivity {
 
@@ -42,6 +48,7 @@ public class MainActivity extends BaseActivity {
             if(customColour != 0) {
                 changeTabsColour(customColour);
             }
+
         } else {
             //Send the user to the first set up screen
             MainActivity.this.finish();

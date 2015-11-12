@@ -1,4 +1,4 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.Trophy;
 
 /**
  * Created by Brian on 09/11/2015.

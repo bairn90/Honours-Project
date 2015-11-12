@@ -1,4 +1,4 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.DBContracts;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
  */
 public class MealDateContract {
 
-    interface Columns {
+    public interface Columns {
         String _ID = "_id";
         String MEAL_DATE = "meal_date";
     }

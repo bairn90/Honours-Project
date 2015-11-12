@@ -1,4 +1,4 @@
-package com.brianmsurgenor.honoursproject;
+package com.brianmsurgenor.honoursproject.DBContracts;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
  */
 public class UserContract {
 
-    interface Columns {
+    public interface Columns {
         String _ID = "_id";
         String USERNAME = "username";
         String DOB = "dob";
