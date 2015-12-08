@@ -40,7 +40,7 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
         if(mCursor.moveToFirst()) {
             do {
                 trophy = new Trophy();
-                trophy.set_id(mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns._ID)));;
+                trophy.set_id(mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns._ID)));
                 trophy.setName(mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_NAME)));
                 trophy.setDescription(mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_DESCRIPTION)));
                 trophy.setAchieved(mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns.ACHIEVED)));

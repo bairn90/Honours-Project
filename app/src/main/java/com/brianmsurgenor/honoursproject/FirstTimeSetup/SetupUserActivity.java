@@ -27,8 +27,7 @@ public class SetupUserActivity extends BaseActivity implements DatePickerDialog.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setup_user);
-        activateToolbar("User Setup");
+        super.addContentView(R.layout.activity_setup_user);
 
         txtName = (TextView) findViewById(R.id.usernameSetup);
         txtDOB = (TextView) findViewById(R.id.DOBSetup);

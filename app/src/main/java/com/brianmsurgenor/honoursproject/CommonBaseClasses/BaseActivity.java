@@ -23,6 +23,8 @@ import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.FoodDiary.FoodDiaryActivity;
 import com.brianmsurgenor.honoursproject.FoodDiary.MealEntryActivity;
 import com.brianmsurgenor.honoursproject.Main.MainActivity;
+import com.brianmsurgenor.honoursproject.Pedometer.PedometerFragment;
+import com.brianmsurgenor.honoursproject.Pet.PetFragment;
 import com.brianmsurgenor.honoursproject.R;
 import com.brianmsurgenor.honoursproject.Settings.SettingsActivity;
 
@@ -161,6 +163,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onOk(AmbilWarnaDialog dialog, int colour) {
                 MainActivity.changeTabsColour(colour);
+                PetFragment.colourChange(colour);
+                PedometerFragment.colourChange(colour);
                 changeColours(colour);
             }
 
