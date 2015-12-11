@@ -7,84 +7,9 @@
         android:id="@+id/app_bar"
         layout="@layout/toolbar" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Time to choose your pet!"
-        android:textSize="@dimen/titleText" />
-
-    <!--<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
-    <!--android:id="@+id/card_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="top"-->
-    <!--android:layout_margin="5dp"-->
-    <!--android:elevation="15dp"-->
-    <!--card_view:cardCornerRadius="4dp">-->
-
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/pet_picker_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:orientation="horizontal">
-
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/pet1C"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_margin="10dp"
-                card_view:cardCornerRadius="40dp">
-
-                <ImageView
-                    android:id="@+id/pet1"
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
-                    android:onClick="petSelected"
-                    android:src="@drawable/frog" />
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/pet2C"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_margin="10dp"
-                card_view:cardCornerRadius="40dp">
-
-                <ImageView
-                    android:id="@+id/pet2"
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
-                    android:onClick="petSelected"
-                    android:src="@drawable/frog" />
-
-            </android.support.v7.widget.CardView>
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/savePet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/button"
-            android:onClick="savePet"
-            android:text="@string/save" />
-
-
-    </LinearLayout>
-
-    <!--</android.support.v7.widget.CardView>-->
+        android:layout_height="match_parent" />
 
 </LinearLayout>

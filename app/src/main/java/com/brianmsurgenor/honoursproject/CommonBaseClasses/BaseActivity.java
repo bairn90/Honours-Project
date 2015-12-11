@@ -78,16 +78,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.addView(contentView, 0);
     }
 
-    protected Toolbar activateToolbar(String title) {
+    protected Toolbar activateToolbar() {
 
-        if (toolbar == null) {
             toolbar = (Toolbar) findViewById(R.id.app_bar);
-            toolbar.setTitle(title);
-            //toolbar.setLogo(R.mipmap.ic_launcher);
             if (toolbar != null) {
                 setSupportActionBar(toolbar);
             }
-        }
 
         return toolbar;
     }

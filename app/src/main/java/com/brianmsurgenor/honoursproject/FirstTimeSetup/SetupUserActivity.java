@@ -1,6 +1,7 @@
 package com.brianmsurgenor.honoursproject.FirstTimeSetup;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -14,31 +15,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
-import com.brianmsurgenor.honoursproject.R;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
+import com.brianmsurgenor.honoursproject.R;
 
-public class SetupUserActivity extends BaseActivity implements DatePickerDialog.OnDateSetListener {
+import java.util.Calendar;
 
-    private TextView txtName, txtDOB;
+public class SetupUserActivity extends BaseActivity {
+
     private Spinner txtGender;
-    private String DOB, name, gender;
+    private TextView txtName;
+    private static TextView txtDOB;
+    private static String DOB;
+    private String name, gender;
     private ContentResolver mContentResolver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.addContentView(R.layout.activity_setup_user);
+        setContentView(R.layout.activity_setup_user);
+        activateToolbar();
 
         txtName = (TextView) findViewById(R.id.usernameSetup);
         txtDOB = (TextView) findViewById(R.id.DOBSetup);
         txtGender = (Spinner) findViewById(R.id.genderSetup);
         mContentResolver = getContentResolver();
-    }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        DOB = dayOfMonth + "/" + monthOfYear + "/" + year;
-        txtDOB.setText(DOB);
     }
 
     public void showDatePickerDialog(View v) {
@@ -67,5 +67,26 @@ public class SetupUserActivity extends BaseActivity implements DatePickerDialog.
     @Override
     public void onBackPressed() {
         return;
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            DOB = day + "/" + month + "/" + year;
+            txtDOB.setText(DOB);
+        }
     }
 }

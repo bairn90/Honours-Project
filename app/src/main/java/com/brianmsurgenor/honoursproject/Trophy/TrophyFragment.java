@@ -28,7 +28,7 @@ public class TrophyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view =  inflater.inflate(R.layout.fragment_trophy, container, false);
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trophy_recycler_view);
         final TrophyGridAdapter adapter = new TrophyGridAdapter(mContentResolver, getActivity());
 
         mLayoutManager = new GridLayoutManager(getActivity(), 2);

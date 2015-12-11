@@ -4,11 +4,12 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
-import android.view.View;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,27 +26,54 @@ public class SetupPetActivity extends BaseActivity {
 
     private ContentResolver mContentResolver;
     private LinkedList<String> trophyNames, trophyDescriptions;
-    private String selectedPet = null;
+    private static String selectedPet = null;
     private String petName = "";
     private String petType;
+    private PetPickerGridAdapter adapter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.addContentView(R.layout.activity_setup_pet);
+        setContentView(R.layout.activity_setup_pet);
+        activateToolbar();
 
         mContentResolver = getContentResolver();
-    }
+        recyclerView = (RecyclerView) findViewById(R.id.pet_picker_recycler_view);
+        mLayoutManager = new GridLayoutManager(SetupPetActivity.this, 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        adapter = new PetPickerGridAdapter(mContentResolver, SetupPetActivity.this);
+        recyclerView.setAdapter(adapter);
 
+    }
 
     @Override
     public void onBackPressed() {
         return;
     }
 
-    public void savePet(View v) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.setup_pet_menu, menu);
+        return true;
+    }
 
-        if(selectedPet == null) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.savePet) {
+            savePet();
+        }
+
+        return true;
+    }
+
+    public void savePet() {
+
+        if (selectedPet == null) {
             Toast.makeText(SetupPetActivity.this, "Please select a pet!", Toast.LENGTH_LONG).show();
             return;
         } else {
@@ -87,46 +115,20 @@ public class SetupPetActivity extends BaseActivity {
         trophyNames = setupTrophies.getTrophyNames();
         trophyDescriptions = setupTrophies.getTrophyDescriptions();
 
-        for(int i=0;i<trophyNames.size();i++) {
+        for (int i = 0; i < trophyNames.size(); i++) {
             ContentValues trophyValues = new ContentValues();
-            trophyValues.put(TrophyContract.Columns.TROPHY_NAME,trophyNames.get(i));
-            trophyValues.put(TrophyContract.Columns.TROPHY_DESCRIPTION,trophyDescriptions.get(i));
-            trophyValues.put(TrophyContract.Columns.ACHIEVED,0);
+            trophyValues.put(TrophyContract.Columns.TROPHY_NAME, trophyNames.get(i));
+            trophyValues.put(TrophyContract.Columns.TROPHY_DESCRIPTION, trophyDescriptions.get(i));
+            trophyValues.put(TrophyContract.Columns.ACHIEVED, 0);
 
-            mContentResolver.insert(TrophyContract.URI_TABLE,trophyValues);
+            mContentResolver.insert(TrophyContract.URI_TABLE, trophyValues);
         }
 
-        startActivity(new Intent(SetupPetActivity.this,MainActivity.class));
+        startActivity(new Intent(SetupPetActivity.this, MainActivity.class));
     }
 
-    public void petSelected (View view) {
-
-        CardView card;
-        unselectAllPets();
-
-        switch(view.getId()) {
-            case R.id.pet1:
-                card = (CardView) findViewById(R.id.pet1C);
-                card.setCardBackgroundColor(Color.YELLOW);
-                selectedPet = "pet1";
-                break;
-            case R.id.pet2:
-                card = (CardView) findViewById(R.id.pet2C);
-                card.setCardBackgroundColor(Color.YELLOW);
-                selectedPet = "pet2";
-                break;
-        }
-
+    public static void petSelected(String selected) {
+        selectedPet = selected;
     }
 
-    public void unselectAllPets() {
-        int petNums = 2;
-        CardView card;
-
-        card = (CardView) findViewById(R.id.pet1C);
-        card.setCardBackgroundColor(Color.WHITE);
-
-        card = (CardView) findViewById(R.id.pet2C);
-        card.setCardBackgroundColor(Color.WHITE);
-    }
 }

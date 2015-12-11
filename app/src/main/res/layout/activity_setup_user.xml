@@ -33,25 +33,30 @@
             <EditText
                 android:id="@+id/usernameSetup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_margin="10dp"
-                android:hint="Name" />
+                android:hint="Name"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/DOBSetup"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_margin="10dp"
                 android:hint="Enter Date Of Birth"
-                android:onClick="showDatePickerDialog" />
+                android:onClick="showDatePickerDialog"
+                android:padding="8dp"
+                android:textColor="@color/md_black_1000"
+                android:textSize="20sp" />
 
             <Spinner
                 android:id="@+id/genderSetup"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="45dp"
                 android:layout_margin="10dp"
                 android:entries="@array/gender"
-                android:spinnerMode="dialog" />
+                android:spinnerMode="dialog"
+                android:textSize="20sp" />
 
 
             <Button

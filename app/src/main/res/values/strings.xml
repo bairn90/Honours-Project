@@ -4,7 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_setup_user">User Setup</string>
-    <string name="title_activity_setup_pet">Pet Setup</string>
+    <string name="title_activity_setup_pet">Time to choose your pet!</string>
     <string name="welcomeString">Welcome to...</string>
     <string name="save">Save</string>
 
