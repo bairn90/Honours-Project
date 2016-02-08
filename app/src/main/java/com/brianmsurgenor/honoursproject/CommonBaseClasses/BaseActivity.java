@@ -32,15 +32,18 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 /**
  * Created by Brian on 30/10/2015.
+ * Class to be inherited by all activities and used to set up the toolbar for the activity and the
+ * navigation drawer if needed
  */
-public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BaseActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private int customColour;
     private Cursor mCursor;
     private ContentResolver mContentResolver;
+    private int customColour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,45 +52,58 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
         mContentResolver = getContentResolver();
 
+        //Sets the toolbar for any activity using the nav bar
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
+        //Sets up the navbar and adds the listener for the items inside the nav bar
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        //Adds the nav bar hamburger icon to the toolbar
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
                 R.string.drawer_open, R.string.drawer_close);
 
+        //Adds the listener to the hamburger icon so user can open the nav bar and syncs the state
         mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
+        //Sets up the colours if the user has a saved custom colour in the database
         setColour();
     }
 
     /**
      * called in extending activities instead of setContentView
-     *
      * @param layoutId The content Layout Id of extending activities
      */
     public void addContentView(int layoutId) {
-        LayoutInflater inflater = (LayoutInflater) this
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater =
+                (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        //Inflate the layout passed to the method and then add it to the nav drawer layout
         View contentView = inflater.inflate(layoutId, null, false);
         mDrawerLayout.addView(contentView, 0);
     }
 
-    protected Toolbar activateToolbar() {
+    /**
+     * Used by an activity where no nav bar id needed. Only sets up toolbar
+     */
+    public Toolbar activateToolbar() {
 
-            toolbar = (Toolbar) findViewById(R.id.app_bar);
-            if (toolbar != null) {
-                setSupportActionBar(toolbar);
-            }
+        //set the toolbar from the ID & if not already set then add it as the actionbar
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
 
         return toolbar;
     }
 
+    /**
+     * Gets the colour from the database & if not 0 i.e. a custom colour is saved then call the
+     * change colours method
+     */
     private void setColour() {
         //Pass 4 nulls to obtain all columns from the User table, 1st null can be projection
         mCursor = mContentResolver.query(UserContract.URI_TABLE, null, null, null, null);
@@ -102,6 +118,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    /**
+     * Called when a user selects an item from the nav drawer. Based on the id of the item selected
+     * send user to activity
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
@@ -150,14 +170,26 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
+    /**
+     * Launches the dialog box for the user to choose their new app colour theme
+     */
     private void launchColourDialog() {
-        int initialColor = getResources().getColor(R.color.toolbar);
+        // If there isn't currently a custom colour set then set it to the default app colour
+        if(customColour == 0) {
+            customColour = getResources().getColor(R.color.toolbar);
+        }
 
-        // initialColor is the initially-selected color to be shown in the rectangle on the left of the arrow.
-        // for example, 0xff000000 is black, 0xff0000ff is blue. Please be aware of the initial 0xff which is the alpha.
-        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, initialColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
+        /*
+         * customColour is the initially-selected color to be shown in the rectangle on the left of the arrow.
+         * for example, 0xff000000 is black, 0xff0000ff is blue. Please be aware of the initial 0xff which is the alpha.
+         */
+        AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, customColour, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onOk(AmbilWarnaDialog dialog, int colour) {
+                /*
+                 * Call the individual change colour methods for any fragment/activity with a button
+                 * or other item to change colour scheme
+                 */
                 MainActivity.changeTabsColour(colour);
                 PetFragment.colourChange(colour);
                 PedometerFragment.colourChange(colour);
@@ -173,23 +205,32 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         dialog.show();
     }
 
+    /**
+     * Called when user selects new colour to change the toolbar and navbar
+     * @param colour the new toolbar colour
+     */
     private void changeColours(int colour) {
 
         //change the colours currenty on the screen
         toolbar.setBackgroundColor(colour);
         findViewById(R.id.navHeader).setBackgroundColor(colour);
 
-
+        //If the API version is sufficient change the status bar colour too (where notifications are)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(colour);
         }
 
-        //Update the database with the users new customer colour
+        //Update the database with the users new customer colour to be loaded up everytime app opens
         ContentValues values = new ContentValues();
         values.put(UserContract.Columns.CUSTOM_COLOUR, colour);
         mContentResolver.update(UserContract.URI_TABLE, values, null, null);
     }
 
+    /**
+     * Called when the user selects the reset colours option from the nav bar
+     * Asks the user to confirm that they want to reset the colours and the calls the relevant
+     * methods
+     */
     private void resetColours() {
 
         new AlertDialog.Builder(this)
@@ -205,6 +246,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
                         toolbar.setBackgroundColor(originalColour);
                         MainActivity.changeTabsColour(originalColour);
+                        PetFragment.colourChange(originalColour);
+                        PedometerFragment.colourChange(originalColour);
                         findViewById(R.id.navHeader).setBackgroundColor(originalColour);
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -224,7 +267,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    /**
+     * Called when the user selects the delete database option from the nav bar.
+     * Asks the user to confirm and deletes all data
+     */
     public void deleteDatabase() {
+
         new AlertDialog.Builder(this)
                 .setIcon(R.drawable.ic_warning_black_24dp)
                 .setTitle("Delete all of your data?")
@@ -234,7 +282,6 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         mContentResolver.delete(UserContract.URI_TABLE, null, null);
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }

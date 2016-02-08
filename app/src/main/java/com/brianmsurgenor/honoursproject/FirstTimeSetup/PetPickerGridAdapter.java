@@ -42,7 +42,7 @@ public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.pet_picker_adapter_layout, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.picker_adapter, viewGroup, false);
         final ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }
@@ -100,9 +100,9 @@ public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdap
 
         public ViewHolder(View itemView) {
             super(itemView);
-            petHolder = (CardView) itemView.findViewById(R.id.cardView_Pet);
-            petBackground = (LinearLayout) itemView.findViewById(R.id.linearPet);
-            imgThumbnail = (ImageView) itemView.findViewById(R.id.petImage);
+            petHolder = (CardView) itemView.findViewById(R.id.item_CardView);
+            petBackground = (LinearLayout) itemView.findViewById(R.id.linearItem);
+            imgThumbnail = (ImageView) itemView.findViewById(R.id.itemImage);
         }
     }
 }

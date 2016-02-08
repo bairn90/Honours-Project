@@ -10,19 +10,23 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 
-import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
+import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 
 /**
  * Created by Brian on 30/10/2015.
+ * Controls all the interactions with the database
  */
 public class DBProvider extends ContentProvider {
 
     protected AppDatabase mOpenHelper;
     private static final UriMatcher mUriMatcher = buildUriMatcher();
 
+    /*
+     * All below vars are unique ID's to refer to the items in the databasse
+     */
     private static final int USER = 100;
     private static final int USER_ID = 101;
 
@@ -32,10 +36,14 @@ public class DBProvider extends ContentProvider {
     private static final int MEAL_DATE = 300;
     private static final int MEAL_DATE_ID = 301;
 
-    private static final int MEAL = 400;
-    private static final int MEAL_ID = 401;
+    private static final int MEAL = 500;
+    private static final int MEAL_ID = 501;
 
 
+    /**
+     * Sets up the URI's for each database table using the unique ID's above
+     * @return
+     */
     private static UriMatcher buildUriMatcher() {
 
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -59,18 +67,26 @@ public class DBProvider extends ContentProvider {
         return matcher;
     }
 
+    //Deletes the database and makes call to create a new one
     private void deleteDatabase() {
         mOpenHelper.close();
         AppDatabase.deleteDatabase(getContext());
         mOpenHelper = new AppDatabase(getContext());
     }
 
+    /**
+     * Sets up a new database on the first create
+     */
     @Override
     public boolean onCreate() {
         mOpenHelper = new AppDatabase(getContext());
         return true;
     }
 
+    /**
+     * @param uri
+     * @return the MIME type of the data from the given URI
+     */
     @Override
     public String getType(Uri uri) {
         final int match = mUriMatcher.match(uri);
@@ -97,7 +113,15 @@ public class DBProvider extends ContentProvider {
         }
     }
 
-
+    /**
+     * Queries the database for the given projection
+     * @param uri
+     * @param projection collumns to return
+     * @param selection the where clause
+     * @param selectionArgs the where clause subject
+     * @param sortOrder
+     * @return the data that has been retrieved from the database
+     */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
@@ -148,6 +172,12 @@ public class DBProvider extends ContentProvider {
         return queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
     }
 
+    /**
+     * Takes in the URI of the table and then inserts the given values in to the database
+     * @param uri
+     * @param values the values to be inserted into the database
+     * @return
+     */
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -171,6 +201,14 @@ public class DBProvider extends ContentProvider {
         }
     }
 
+    /**
+     * Takes in the URI of the table being updated and updates the values
+     * @param uri
+     * @param values the values to be updated dependent on the where
+     * @param selection where clause
+     * @param selectionArgs where clause subject
+     * @return
+     */
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -215,13 +253,25 @@ public class DBProvider extends ContentProvider {
         }
     }
 
+    /**
+     * Takes in the URI of the table where a row is to be deleted and deletes where requested
+     * Entrie database deleted with UserContract URI and 2x null for selections
+     * @param uri
+     * @param selection where clause
+     * @param selectionArgs where clause subject
+     * @return
+     */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
 
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = mUriMatcher.match(uri);
 
-        if(uri.equals(UserContract.URI_TABLE)) {
+        /*
+         * When only the usercontract URi is passed the selection == null then delete the entire
+         * database as no selection clause made to delete specific row
+         */
+        if(uri.equals(UserContract.URI_TABLE) && selection == null) {
             deleteDatabase();
             return 0;
         }

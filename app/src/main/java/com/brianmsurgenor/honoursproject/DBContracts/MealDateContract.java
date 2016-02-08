@@ -5,12 +5,16 @@ import android.provider.BaseColumns;
 
 /**
  * Created by Brian on 30/10/2015.
+ * Contract class to prevent having to write numerous SQL statements all the time
  */
 public class MealDateContract {
 
+    //Interface to get the column names to be used for any db queries
     public interface Columns {
         String _ID = "_id";
         String MEAL_DATE = "meal_date";
+        String MEAL_TIME = "meal_time";
+        String MEAL_TYPE = "meal_type";
     }
 
     public static final String CONTENT_AUTHORITY = "com.brianmsurgenor.honoursproject.provider";

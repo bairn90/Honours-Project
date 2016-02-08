@@ -13,6 +13,14 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+
+    <string-array name="meals">
+        <item>Meal</item>
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Snack</item>
+    </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="title_activity_meal_entry">Meal Entry</string>

@@ -115,7 +115,8 @@ public class StepService extends Service implements StepListener {
         passedIntent.putExtra("tab", 1);
 
         // Work around a bug where notif number has to be > 0
-        updateNotification((mSteps > 0) ? mSteps : 1);
+//        updateNotification((mSteps > 0) ? mSteps : 1);
+        updateNotification(mSteps);
         startForegroundCompat(NOTIFY, notification);
     }
 

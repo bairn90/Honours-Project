@@ -13,7 +13,6 @@ import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.FirstTimeSetup.SetupPetActivity;
 import com.brianmsurgenor.honoursproject.FirstTimeSetup.SetupUserActivity;
 import com.brianmsurgenor.honoursproject.FoodDiary.MealEntryActivity;
-import com.brianmsurgenor.honoursproject.Pedometer.StepService;
 import com.brianmsurgenor.honoursproject.R;
 
 public class MainActivity extends BaseActivity {
@@ -29,20 +28,29 @@ public class MainActivity extends BaseActivity {
         super.addContentView(R.layout.activity_main);
 
         mContentResolver = getContentResolver();
+
+        /*
+         * Set up the tabs inside the Main Activity
+         */
         tabs = (TabLayout) findViewById(R.id.tabs);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         TabsPagerAdapter adapter = new TabsPagerAdapter(getSupportFragmentManager());
-
         pager.setAdapter(adapter);
         tabs.setupWithViewPager(pager);
 
         int check = startupCheck();
+        /*
+         * If the user has fully set up their pet and profile then run the activity
+         * else send to appropriate setup screen
+         */
         if (check == 0) {
+            //Check if the user was sent here via nav bar and so send to appropriate tab
             Bundle tabData = getIntent().getExtras();
             if(tabData != null) {
                 pager.setCurrentItem(tabData.getInt("tab"));
             }
 
+            //Run the colour check
             if(customColour != 0) {
                 changeTabsColour(customColour);
             }
@@ -62,6 +70,10 @@ public class MainActivity extends BaseActivity {
         tabs.setBackgroundColor(colour);
     }
 
+    /**
+     * Checks whether the user has opened the app before and setup their user profile
+     * @return 0 when setup complete, 1 when user data but no pet setup, 2 when no setup at all
+     */
     private int startupCheck() {
         //Pass 4 nulls to obtain all columns from the User table, 1st null can be projection
         mCursor = mContentResolver.query(UserContract.URI_TABLE, null, null, null, null);
@@ -82,10 +94,11 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void startStepService() {
-        startService(new Intent(MainActivity.this, StepService.class));
-    }
-
+    /**
+     * Called when the user clicks the floating action button in the pet fragement.
+     * Send to the meal entry activity
+     * @param v
+     */
     public void feedPet(View v) {
         startActivity(new Intent(MainActivity.this, MealEntryActivity.class));
     }
