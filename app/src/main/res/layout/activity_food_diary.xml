@@ -7,4 +7,9 @@
         android:id="@+id/app_bar"
         layout="@layout/toolbar" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/food_diary_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

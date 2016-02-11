@@ -2,6 +2,7 @@ package com.brianmsurgenor.honoursproject.FoodDiary;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.AppConstants;
+import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.R;
 
 import java.util.ArrayList;
@@ -20,25 +22,33 @@ import java.util.List;
 /**
  * Created by Brian on 27/01/2016.
  */
-public class FoodPickerGridAdapter extends RecyclerView.Adapter<FoodPickerGridAdapter.ViewHolder> {
+public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.ViewHolder> {
 
     private List<Integer> foodPics;
-    private List<String> foodCategories;
+    private List<String> foodCategories, loadedFoods;
+    private List<Boolean> loadedFoodPicks;
     private List<LinearLayout> backgroundList;
     private Context mContext;
     private AppConstants appConstants;
+    private int mealID;
 
-    public FoodPickerGridAdapter(ContentResolver contentResolver, Context context) {
+    public FoodPickerAdapter(Context context, int mealID) {
         super();
 
         appConstants = new AppConstants();
         foodPics = new ArrayList<>();
         foodCategories = new ArrayList<>();
+        loadedFoods = new ArrayList<>();
+        loadedFoodPicks = new ArrayList<>();
         backgroundList = new ArrayList<>();
         mContext = context;
+        this.mealID = mealID;
 
         foodPics = appConstants.getFoodPics();
         foodCategories = appConstants.getFoodCategories();
+        if(mealID != 0) {
+            loadFoods();
+        }
     }
 
     @Override
@@ -55,6 +65,20 @@ public class FoodPickerGridAdapter extends RecyclerView.Adapter<FoodPickerGridAd
         final String foodCategory = foodCategories.get(i);
         viewHolder.imgThumbnail.setImageResource(id);
         backgroundList.add(viewHolder.foodBackground);
+
+        /*
+         * To highlight the selected foods when user has come to this screen from the diary
+         * selected food method called here but will only call when the user scroll and the item
+         * appears on screen (need to move)
+         */
+        if(mealID != 0) {
+            for (String food: loadedFoods) {
+                if(food.equals(id + "")) {
+                    viewHolder.foodBackground.setBackgroundColor(Color.YELLOW);
+                    MealEntryActivity.selectedFood(true, "" + id, foodCategory);
+                }
+            }
+        }
 
         viewHolder.foodHolder.setOnClickListener(new View.OnClickListener() {
             boolean selected = false;
@@ -73,6 +97,24 @@ public class FoodPickerGridAdapter extends RecyclerView.Adapter<FoodPickerGridAd
                 }
             }
         });
+
+    }
+
+    private void loadFoods() {
+
+        ContentResolver mContentResolver = mContext.getContentResolver();
+        Cursor mCursor;
+
+        String[] projection = {MealContract.Columns.MEAL_ITEM};
+        String selection = MealContract.Columns.MEAL_ID + " = " + mealID;
+
+        mCursor = mContentResolver.query(MealContract.URI_TABLE, projection , selection, null, null);
+
+        if(mCursor.moveToFirst()) {
+            do {
+                loadedFoods.add(mCursor.getString(mCursor.getColumnIndex(MealContract.Columns.MEAL_ITEM)));
+            } while (mCursor.moveToNext());
+        }
 
     }
 

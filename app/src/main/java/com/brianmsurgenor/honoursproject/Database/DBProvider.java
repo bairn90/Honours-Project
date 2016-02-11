@@ -225,7 +225,7 @@ public class DBProvider extends ContentProvider {
                 return db.update(AppDatabase.Tables.USER, values, selectionCriteria, selectionArgs);
 
             case TROPHY:
-                return db.update(AppDatabase.Tables.USER, values, selection, selectionArgs);
+                return db.update(AppDatabase.Tables.TROPHIES, values, selection, selectionArgs);
             case TROPHY_ID:
                 String trophyID = TrophyContract.Trophy.getTrophyID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + trophyID
@@ -233,7 +233,7 @@ public class DBProvider extends ContentProvider {
                 return db.update(AppDatabase.Tables.TROPHIES, values, selectionCriteria, selectionArgs);
 
             case MEAL_DATE:
-                return db.update(AppDatabase.Tables.USER, values, selection, selectionArgs);
+                return db.update(AppDatabase.Tables.MEAL_DATE, values, selection, selectionArgs);
             case MEAL_DATE_ID:
                 String mealDateID = MealDateContract.MealDate.getMealDateID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + mealDateID
@@ -281,25 +281,25 @@ public class DBProvider extends ContentProvider {
             case USER_ID:
                 String userID = UserContract.User.getUserID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + userID
-                        + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
                 return db.delete(AppDatabase.Tables.USER, selectionCriteria, selectionArgs);
 
             case TROPHY_ID:
                 String trophyID = TrophyContract.Trophy.getTrophyID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + trophyID
-                        + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
                 return db.delete(AppDatabase.Tables.USER, selectionCriteria, selectionArgs);
 
             case MEAL_DATE_ID:
                 String mealDateID = MealDateContract.MealDate.getMealDateID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + mealDateID
-                        + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
                 return db.delete(AppDatabase.Tables.MEAL_DATE, selectionCriteria, selectionArgs);
 
             case MEAL_ID:
                 String mealID = MealContract.Meal.getMealID(uri);
-                selectionCriteria = BaseColumns._ID + "=" + mealID
-                        + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
+                selectionCriteria = MealContract.Columns.MEAL_ID + "=" + mealID
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
                 return db.delete(AppDatabase.Tables.MEAL, selectionCriteria, selectionArgs);
 
             default:

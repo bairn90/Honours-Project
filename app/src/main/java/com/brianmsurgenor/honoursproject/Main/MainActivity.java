@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
      * @return 0 when setup complete, 1 when user data but no pet setup, 2 when no setup at all
      */
     private int startupCheck() {
-        //Pass 4 nulls to obtain all columns from the User table, 1st null can be projection
+        //Pass 4 nulls to obtain all columns from the User table, 1st null can be projection, 2nd filter
         mCursor = mContentResolver.query(UserContract.URI_TABLE, null, null, null, null);
 
         //If there is data retrieve it otherwise return false to go to user setup
