@@ -2,20 +2,24 @@ package com.brianmsurgenor.honoursproject.FoodDiary;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
@@ -45,16 +49,17 @@ public class FoodDiaryAdapter extends RecyclerView.Adapter<FoodDiaryAdapter.View
         mealTypes = new ArrayList<>();
         mealCategories = new ArrayList<>();
 
-        String[] projection = {MealDateContract.Columns._ID, MealDateContract.Columns.MEAL_DATE,
-                MealDateContract.Columns.MEAL_TYPE};
-        mCursor = mContentResolver.query(MealDateContract.URI_TABLE, projection, null, null,
+        mCursor = mContentResolver.query(MealDateContract.URI_TABLE, null, null, null,
                 MealDateContract.Columns._ID + " DESC");
+        String typeTime;
 
         if (mCursor.moveToFirst()) {
             do {
                 mealIDS.add(mCursor.getInt(mCursor.getColumnIndex(MealDateContract.Columns._ID)));
                 mealDates.add(mCursor.getString(mCursor.getColumnIndex(MealDateContract.Columns.MEAL_DATE)));
-                mealTypes.add(mCursor.getString(mCursor.getColumnIndex(MealDateContract.Columns.MEAL_TYPE)));
+                typeTime = mCursor.getString(mCursor.getColumnIndex(MealDateContract.Columns.MEAL_TYPE)) + " - " +
+                        mCursor.getString(mCursor.getColumnIndex(MealDateContract.Columns.MEAL_TIME));
+                mealTypes.add(typeTime);
             } while (mCursor.moveToNext());
         }
 
@@ -90,10 +95,12 @@ public class FoodDiaryAdapter extends RecyclerView.Adapter<FoodDiaryAdapter.View
         final ArrayList<String> listCategories = mealCategories.get(i);
         final int mealID = mealIDS.get(i);
         viewHolder.mealDate.setText(date);
-        viewHolder.mealType.setText(type);
+        viewHolder.mealTypeTime.setText(type);
         int gCount = 0;
         int oCount = 0;
         int rCount = 0;
+
+        Log.d("Count", listCategories.size()+"");
 
         for (int x = 0; x < listCategories.size(); x++) {
             String cat = listCategories.get(x);
@@ -150,12 +157,67 @@ public class FoodDiaryAdapter extends RecyclerView.Adapter<FoodDiaryAdapter.View
         viewHolder.mealHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext.getApplicationContext(), MealEntryActivity.class);
-                intent.putExtra(MealDateContract.Columns._ID, mealID);
-                intent.putExtra(MealDateContract.Columns.MEAL_TYPE, type);
-                mContext.startActivity(intent);
+                editMeal(type,mealID);
             }
         });
+
+        viewHolder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                MenuItem edit = menu.add(0, 0, 0, "Edit");//groupId, itemId, order, title
+                edit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        editMeal(type,mealID);
+                        return false;
+                    }
+                });
+                MenuItem delete = menu.add(0, 1, 0, "Delete");
+                delete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        deleteMeal(mealID);
+                        return false;
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void editMeal(String type, int mealID) {
+        Intent intent = new Intent(mContext.getApplicationContext(), MealEntryActivity.class);
+        intent.putExtra(MealDateContract.Columns._ID, mealID);
+        String[] splitType = type.split(" ");
+        intent.putExtra(MealDateContract.Columns.MEAL_TYPE, splitType[0]);
+        mContext.startActivity(intent);
+    }
+
+    private void deleteMeal(int mealID) {
+
+        final int mealIDF = mealID;
+
+        new AlertDialog.Builder(mContext)
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .setTitle("Delete meal")
+                .setMessage("Are you sure you want to delete this meal?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = MealContract.Meal.buildMealUri(mealIDF + "");
+                        mContentResolver.delete(uri, null, null);
+
+                        uri = MealDateContract.MealDate.buildMealDateUri(mealIDF + "");
+                        mContentResolver.delete(uri, null, null);
+
+                        Toast.makeText(mContext.getApplicationContext(), "Meal has been deleted", Toast.LENGTH_SHORT).show();
+                        mContext.startActivity(new Intent(mContext.getApplicationContext(), FoodDiaryActivity.class));
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
 
     }
 
@@ -165,38 +227,18 @@ public class FoodDiaryAdapter extends RecyclerView.Adapter<FoodDiaryAdapter.View
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+
         public CardView mealHolder;
-        public TextView mealDate, mealType;
+        public TextView mealDate, mealTypeTime;
         public LinearLayout mealLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mealHolder = (CardView) itemView.findViewById(R.id.item_CardView);
             mealDate = (TextView) itemView.findViewById(R.id.mealDate);
-            mealType = (TextView) itemView.findViewById(R.id.mealType);
+            mealTypeTime = (TextView) itemView.findViewById(R.id.mealType);
             mealLayout = (LinearLayout) itemView.findViewById(R.id.linearItem);
         }
     }
 
-    class GreenDot extends View {
-
-        private float x,y;
-        private int r;
-
-        public GreenDot(Context context, float x, float y, int r) {
-            super(context);
-
-            this.x = x;
-            this.y = y;
-            this.r = r;
-        }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
-            Paint p = new Paint();
-            p.setColor(Color.GREEN);
-            canvas.drawCircle(x, y, r, p);
-        }
-    }
 }

@@ -29,11 +29,11 @@
                 <item
                     android:id="@+id/FoodDiary"
                     android:icon="@drawable/ic_action_calendar_day"
-                    android:title="My Food Diary"/>
+                    android:title="Food Diary"/>
                 <item
                     android:id="@+id/AddMeal"
                     android:icon="@drawable/ic_local_dining_black_24dp"
-                    android:title="Add Meal"/>
+                    android:title="Feed Pet"/>
             </menu>
         </item>
         <item android:title="Settings">
