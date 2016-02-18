@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
+import com.brianmsurgenor.honoursproject.DBContracts.PedometerContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 
@@ -19,15 +20,15 @@ public class AppDatabase extends SQLiteOpenHelper {
     //Tag used for logging purposes on error occuring
     private static final String TAG = AppDatabase.class.getSimpleName();
     private static final String DATABASE_NAME = "health.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 //    private final Context mcontext; Never user?
 
     interface Tables {
         String USER = "user";
         String MEAL_DATE = "meal_date";
-        String MEAL_TYPE = "meal_type";
         String MEAL = "meal";
         String TROPHIES = "trophies";
+        String PEDOMETER = "pedometer";
     }
 
 
@@ -71,6 +72,11 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + TrophyContract.Columns.TROPHY_NAME + " TEXT NOT NULL,"
                 + TrophyContract.Columns.TROPHY_DESCRIPTION + " TEXT NOT NULL,"
                 + TrophyContract.Columns.ACHIEVED + " INTEGER NOT NULL)");
+
+        db.execSQL("CREATE TABLE " + Tables.PEDOMETER + "("
+                + PedometerContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + PedometerContract.Columns.DATE + " TEXT NOT NULL,"
+                + PedometerContract.Columns.STEPS + " INTEGER NOT NULL)");
     }
 
 
@@ -94,6 +100,8 @@ public class AppDatabase extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + Tables.USER);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.MEAL_DATE);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.MEAL);
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.TROPHIES);
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.PEDOMETER);
             onCreate(db);
         }
     }

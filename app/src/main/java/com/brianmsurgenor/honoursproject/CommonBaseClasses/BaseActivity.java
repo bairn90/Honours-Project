@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
+import com.brianmsurgenor.honoursproject.Exercise.ExerciseDiaryActivity;
 import com.brianmsurgenor.honoursproject.FoodDiary.FoodDiaryActivity;
 import com.brianmsurgenor.honoursproject.FoodDiary.MealEntryActivity;
 import com.brianmsurgenor.honoursproject.Main.MainActivity;
@@ -152,6 +153,9 @@ public class BaseActivity extends AppCompatActivity
                 break;
             case R.id.AddMeal:
                 startActivity(new Intent(getApplicationContext(), MealEntryActivity.class));
+                break;
+            case R.id.PedometerDiary:
+                startActivity(new Intent(getApplicationContext(), ExerciseDiaryActivity.class));
                 break;
             case R.id.ColourChange:
                 launchColourDialog();

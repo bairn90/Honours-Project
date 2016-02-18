@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.brianmsurgenor.honoursproject" >
+    package="com.brianmsurgenor.honoursproject">
 
     <permission android:name="com.brianmsurgenor.honoursproject.provider.READWRITE" />
 
@@ -11,10 +11,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".Main.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,6 +36,9 @@
         <activity
             android:name=".FoodDiary.FoodDiaryActivity"
             android:label="@string/title_activity_food_diary" />
+
+        <activity android:name=".Exercise.ExerciseDiaryActivity"
+            android:label="@string/title_exercise_activity"/>
 
         <provider
             android:name=".Database.DBProvider"

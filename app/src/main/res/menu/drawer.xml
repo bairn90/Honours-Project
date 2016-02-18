@@ -24,7 +24,7 @@
             android:icon="@drawable/ic_action_joypad"
             android:title="Pet Games"/>
         <item
-            android:title="Food Diary">
+            android:title="Diaries">
             <menu>
                 <item
                     android:id="@+id/FoodDiary"
@@ -34,6 +34,10 @@
                     android:id="@+id/AddMeal"
                     android:icon="@drawable/ic_local_dining_black_24dp"
                     android:title="Feed Pet"/>
+                <item
+                    android:id="@+id/PedometerDiary"
+                    android:icon="@drawable/ic_action_calendar_day"
+                    android:title="Exercise Diary"/>
             </menu>
         </item>
         <item android:title="Settings">

@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/foodDiaryLayout"
+    android:id="@+id/exDiaryLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,7 +9,7 @@
         layout="@layout/toolbar" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/food_diary_recycler_view"
+        android:id="@+id/exercise_diary_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

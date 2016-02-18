@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -99,8 +98,6 @@ public class FoodDiaryAdapter extends RecyclerView.Adapter<FoodDiaryAdapter.View
         int gCount = 0;
         int oCount = 0;
         int rCount = 0;
-
-        Log.d("Count", listCategories.size()+"");
 
         for (int x = 0; x < listCategories.size(); x++) {
             String cat = listCategories.get(x);

@@ -2,10 +2,12 @@ package com.brianmsurgenor.honoursproject.Pedometer;
 
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -20,10 +22,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.brianmsurgenor.honoursproject.DBContracts.PedometerContract;
 import com.brianmsurgenor.honoursproject.IStepService;
 import com.brianmsurgenor.honoursproject.IStepServiceCallback;
 import com.brianmsurgenor.honoursproject.R;
 
+import java.util.Calendar;
 import java.util.logging.Logger;
 
 public class PedometerFragment extends Fragment implements View.OnClickListener {
@@ -47,6 +51,7 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
     public static IStepService mService = null;
     public static Intent stepServiceIntent = null;
     private static int sensitivity = 250;
+    private View view;
     private static final Logger logger = Logger.getLogger(PedometerFragment.class.getSimpleName());
 
     @Override
@@ -68,7 +73,7 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_pedometer, container, false);
+        view = inflater.inflate(R.layout.fragment_pedometer, container, false);
 
         steps = (TextView) view.findViewById(R.id.stepCount);
         miles = (TextView) view.findViewById(R.id.mileCount);
@@ -86,6 +91,8 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
         if (mService != null) {
             startStop.setText("Stop Pedometer");
         }
+
+        steps.setText(getPedometerStats() + "");
 
         return view;
     }
@@ -105,10 +112,50 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
                 StepDetector.setSensitivity(sensitivity);
                 start();
             } else {
+
+                updatePedometerDB();
+
                 startStop.setText("Start Pedometer");
                 Toast.makeText(getActivity(), "Stopped", Toast.LENGTH_SHORT).show();
                 stop();
             }
+        }
+
+    }
+
+    private int getPedometerStats() {
+        Calendar c = Calendar.getInstance();
+        String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
+        String[] projection = {PedometerContract.Columns.STEPS};
+        String filter = PedometerContract.Columns.DATE + " = '" + date + "'";
+
+        mCursor = mContentResolver.query(PedometerContract.URI_TABLE,projection,filter,null,null);
+
+        if(mCursor.moveToFirst()) {
+            return mCursor.getInt(mCursor.getColumnIndex(PedometerContract.Columns.STEPS));
+        } else {
+            return 0;
+        }
+    }
+
+    private void updatePedometerDB() {
+
+        Calendar c = Calendar.getInstance();
+        String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
+        String[] projection = {PedometerContract.Columns.DATE};
+        String filter = PedometerContract.Columns.DATE + " = '" + date + "'";
+
+        mCursor = mContentResolver.query(PedometerContract.URI_TABLE,projection,filter,null,null);
+
+        ContentValues values = new ContentValues();
+        values.put(PedometerContract.Columns.STEPS, steps.getText().toString());
+
+        if(mCursor.moveToFirst()) {
+            mContentResolver.update(PedometerContract.URI_TABLE,values,filter,null);
+        } else {
+            values.put(PedometerContract.Columns.DATE, date);
+            Uri r = mContentResolver.insert(PedometerContract.URI_TABLE, values);
+            Toast.makeText(getActivity(), r.toString() , Toast.LENGTH_SHORT).show();
         }
 
     }

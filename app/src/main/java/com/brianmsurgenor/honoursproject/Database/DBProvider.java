@@ -12,6 +12,7 @@ import android.text.TextUtils;
 
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
+import com.brianmsurgenor.honoursproject.DBContracts.PedometerContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 
@@ -36,8 +37,11 @@ public class DBProvider extends ContentProvider {
     private static final int MEAL_DATE = 300;
     private static final int MEAL_DATE_ID = 301;
 
-    private static final int MEAL = 500;
-    private static final int MEAL_ID = 501;
+    private static final int MEAL = 400;
+    private static final int MEAL_ID = 401;
+
+    private static final int PEDOMETER = 500;
+    private static final int PEDOMETER_ID = 501;
 
 
     /**
@@ -63,6 +67,10 @@ public class DBProvider extends ContentProvider {
         authority = MealContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, "meal", MEAL);
         matcher.addURI(authority, "meal/*", MEAL_ID);
+
+        authority = PedometerContract.CONTENT_AUTHORITY;
+        matcher.addURI(authority, "pedometer", PEDOMETER);
+        matcher.addURI(authority, "pedometer/*", PEDOMETER_ID);
 
         return matcher;
     }
@@ -108,6 +116,10 @@ public class DBProvider extends ContentProvider {
                 return MealContract.Meal.CONTENT_TYPE;
             case MEAL_ID:
                 return MealContract.Meal.CONTENT_ITEM_TYPE;
+            case PEDOMETER:
+                return PedometerContract.Pedometer.CONTENT_TYPE;
+            case PEDOMETER_ID:
+                return PedometerContract.Pedometer.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
@@ -164,6 +176,16 @@ public class DBProvider extends ContentProvider {
                 String mealID = MealContract.Meal.getMealID(uri);
                 queryBuilder.appendWhere(BaseColumns._ID + "=" + mealID);
                 break;
+
+            case PEDOMETER:
+                queryBuilder.setTables(AppDatabase.Tables.PEDOMETER);
+                break;
+            case PEDOMETER_ID:
+                queryBuilder.setTables(AppDatabase.Tables.PEDOMETER);
+                String pedometerID = PedometerContract.Pedometer.getPedometerID(uri);
+                queryBuilder.appendWhere(BaseColumns._ID + "=" + pedometerID);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
 
@@ -196,6 +218,9 @@ public class DBProvider extends ContentProvider {
             case MEAL:
                 long mRecordID = db.insertOrThrow(AppDatabase.Tables.MEAL,null,values);
                 return MealContract.Meal.buildMealUri(String.valueOf(mRecordID));
+            case PEDOMETER:
+                long pRecordID = db.insertOrThrow(AppDatabase.Tables.PEDOMETER,null,values);
+                return PedometerContract.Pedometer.buildPedometerUri(String.valueOf(pRecordID));
             default:
                 throw new IllegalArgumentException("Unknown uri " + uri);
         }
@@ -247,6 +272,14 @@ public class DBProvider extends ContentProvider {
                 selectionCriteria = BaseColumns._ID + "=" + mealID
                         + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
                 return db.update(AppDatabase.Tables.MEAL, values, selectionCriteria, selectionArgs);
+
+            case PEDOMETER:
+                return db.update(AppDatabase.Tables.PEDOMETER, values, selection, selectionArgs);
+            case PEDOMETER_ID:
+                String pedometerID = PedometerContract.Pedometer.getPedometerID(uri);
+                selectionCriteria = BaseColumns._ID + "=" + pedometerID
+                        + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
+                return db.update(AppDatabase.Tables.PEDOMETER, values, selectionCriteria, selectionArgs);
 
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
@@ -301,6 +334,12 @@ public class DBProvider extends ContentProvider {
                 selectionCriteria = MealContract.Columns.MEAL_ID + "=" + mealID
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
                 return db.delete(AppDatabase.Tables.MEAL, selectionCriteria, selectionArgs);
+
+            case PEDOMETER_ID:
+                String pedometerID = PedometerContract.Pedometer.getPedometerID(uri);
+                selectionCriteria = BaseColumns._ID + "=" + pedometerID
+                        + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
+                return db.delete(AppDatabase.Tables.PEDOMETER, selectionCriteria, selectionArgs);
 
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
