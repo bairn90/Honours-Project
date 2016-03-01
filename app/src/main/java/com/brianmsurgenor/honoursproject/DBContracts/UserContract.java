@@ -17,6 +17,9 @@ public class UserContract {
         String GENDER = "gender";
         String HEIGHT = "height";
         String WEIGHT = "weight";
+        String BREAKFAST_NOTIF = "breakfast_notif";
+        String LUNCH_NOTIF = "lunch_notif";
+        String DINNER_NOTIF = "dinner_notif ";
         String PET_NAME = "pet_name";
         String PET_TYPE = "pet_type";
         String CUSTOM_COLOUR = "customer_colour";

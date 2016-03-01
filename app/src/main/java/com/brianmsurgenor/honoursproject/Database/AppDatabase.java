@@ -1,5 +1,7 @@
 package com.brianmsurgenor.honoursproject.Database;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,6 +11,9 @@ import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
 import com.brianmsurgenor.honoursproject.DBContracts.PedometerContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
+import com.brianmsurgenor.honoursproject.Trophy.Trophies;
+
+import java.util.LinkedList;
 
 /**
  * Created by Brian on 30/10/2015.
@@ -21,7 +26,9 @@ public class AppDatabase extends SQLiteOpenHelper {
     private static final String TAG = AppDatabase.class.getSimpleName();
     private static final String DATABASE_NAME = "health.db";
     private static final int DATABASE_VERSION = 2;
-//    private final Context mcontext; Never user?
+    private LinkedList<String> trophyNames, trophyDescriptions;
+    private ContentResolver mContentResolver;
+    private Context mContext;
 
     interface Tables {
         String USER = "user";
@@ -34,7 +41,8 @@ public class AppDatabase extends SQLiteOpenHelper {
 
     public AppDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-//        mcontext = context;
+        mContext = context;
+        mContentResolver = mContext.getContentResolver();
     }
 
     /**
@@ -50,13 +58,13 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + UserContract.Columns.HEIGHT + " TEXT,"
                 + UserContract.Columns.WEIGHT + " TEXT,"
                 + UserContract.Columns.PET_NAME + " TEXT,"
-                + UserContract.Columns.PET_TYPE + " TEXT,"
+                + UserContract.Columns.PET_TYPE + " INTEGER,"
                 + UserContract.Columns.CUSTOM_COLOUR + " INTEGER)");
 
         db.execSQL("CREATE TABLE " + Tables.MEAL_DATE + "("
                 + MealDateContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + MealDateContract.Columns.MEAL_DATE + " TEXT NOT NULL,"
-                + MealDateContract.Columns.MEAL_TIME + " TEXT NOT NULL,"
+                + MealDateContract.Columns.MEAL_TIME + " SIGNED BIGINT NOT NULL,"
                 + MealDateContract.Columns.MEAL_TYPE + " TEXT NOT NULL)");
 
         db.execSQL("CREATE TABLE " + Tables.MEAL + "("
@@ -67,16 +75,31 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + MealContract.Columns.MEAL_ID + ") "
                 + "REFERENCES " + Tables.MEAL_DATE + "(" + MealDateContract.Columns._ID + ") )");
 
+        db.execSQL("CREATE TABLE " + Tables.PEDOMETER + "("
+                + PedometerContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + PedometerContract.Columns.DATE + " TEXT NOT NULL,"
+                + PedometerContract.Columns.STEPS + " INTEGER NOT NULL)");
+
         db.execSQL("CREATE TABLE " + Tables.TROPHIES + "("
                 + TrophyContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + TrophyContract.Columns.TROPHY_NAME + " TEXT NOT NULL,"
                 + TrophyContract.Columns.TROPHY_DESCRIPTION + " TEXT NOT NULL,"
                 + TrophyContract.Columns.ACHIEVED + " INTEGER NOT NULL)");
 
-        db.execSQL("CREATE TABLE " + Tables.PEDOMETER + "("
-                + PedometerContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + PedometerContract.Columns.DATE + " TEXT NOT NULL,"
-                + PedometerContract.Columns.STEPS + " INTEGER NOT NULL)");
+
+        //Setup trophies in database
+        Trophies setupTrophies = new Trophies(mContext);
+        trophyNames = setupTrophies.getTrophyNames();
+        trophyDescriptions = setupTrophies.getTrophyDescriptions();
+
+        for (int i = 0; i < trophyNames.size(); i++) {
+            ContentValues trophyValues = new ContentValues();
+            trophyValues.put(TrophyContract.Columns.TROPHY_NAME, trophyNames.get(i));
+            trophyValues.put(TrophyContract.Columns.TROPHY_DESCRIPTION, trophyDescriptions.get(i));
+            trophyValues.put(TrophyContract.Columns.ACHIEVED, 0);
+
+            db.insert(Tables.TROPHIES, null, trophyValues);
+        }
     }
 
 

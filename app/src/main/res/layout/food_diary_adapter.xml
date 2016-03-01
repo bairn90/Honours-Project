@@ -21,14 +21,14 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="0.2"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/mealType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TEST"
+                android:text="BREAKFAST - 1313"
                 android:textSize="20sp" />
 
             <TextView
@@ -43,9 +43,10 @@
         <LinearLayout
             android:id="@+id/categoryLayout"
             android:orientation="horizontal"
+            android:gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.5">
+            android:layout_weight="0.8">
 
         </LinearLayout>
 

@@ -38,6 +38,10 @@
                     android:id="@+id/PedometerDiary"
                     android:icon="@drawable/ic_action_calendar_day"
                     android:title="Exercise Diary"/>
+                <item
+                    android:id="@+id/AddExercise"
+                    android:icon="@drawable/ic_directions_walk_black_24dp"
+                    android:title="Exercise Pet" />
             </menu>
         </item>
         <item android:title="Settings">

@@ -48,7 +48,6 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
             } while (mCursor.moveToNext());
         }
 
-
     }
 
     @Override
@@ -80,8 +79,6 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
                 alert.setTitle(trophy.getName());
                 alert.show();
 
-                viewHolder.imgThumbnail.setImageResource(R.drawable.ic_trophy_winner);
-                viewHolder.imgThumbnail.setColorFilter(null);
             }
         });
     }

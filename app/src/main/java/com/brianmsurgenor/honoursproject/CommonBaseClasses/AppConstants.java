@@ -11,6 +11,7 @@ public class AppConstants {
     
     private ArrayList foodPics;
     private ArrayList foodCategories;
+    private ArrayList sports;
     private final static String GREEN = "green";
     private final static String ORANGE = "orange";
     private final static String RED = "red";
@@ -18,9 +19,15 @@ public class AppConstants {
     public AppConstants() {
         foodPics = new ArrayList();
         foodCategories = new ArrayList();
+        sports = new ArrayList();
 
+        setSports();
         setFoodPics();
         setFoodCategories();
+    }
+
+    public void setSports() {
+
     }
 
     public void setFoodPics() {
@@ -44,11 +51,14 @@ public class AppConstants {
     }
 
     public ArrayList getFoodPics() {
-
         return foodPics;
     }
 
     public ArrayList getFoodCategories() {
         return foodCategories;
+    }
+
+    public ArrayList getSports() {
+        return sports;
     }
 }

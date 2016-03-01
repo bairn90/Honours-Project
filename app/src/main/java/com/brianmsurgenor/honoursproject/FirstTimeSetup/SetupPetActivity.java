@@ -1,9 +1,11 @@
 package com.brianmsurgenor.honoursproject.FirstTimeSetup;
 
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,21 +16,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
-import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.Main.MainActivity;
 import com.brianmsurgenor.honoursproject.R;
-import com.brianmsurgenor.honoursproject.Trophy.Trophies;
-
-import java.util.LinkedList;
 
 public class SetupPetActivity extends BaseActivity {
 
     private ContentResolver mContentResolver;
-    private LinkedList<String> trophyNames, trophyDescriptions;
-    private static String selectedPet = null;
+    private static int selectedPet = 0;
     private String petName = "";
-    private String petType;
+    private int petType;
     private PetPickerGridAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -73,7 +70,7 @@ public class SetupPetActivity extends BaseActivity {
 
     public void savePet() {
 
-        if (selectedPet == null) {
+        if (selectedPet == 0) {
             Toast.makeText(SetupPetActivity.this, "Please select a pet!", Toast.LENGTH_LONG).show();
             return;
         } else {
@@ -111,23 +108,32 @@ public class SetupPetActivity extends BaseActivity {
 
         mContentResolver.update(UserContract.URI_TABLE, values, null, null);
 
-        Trophies setupTrophies = new Trophies();
-        trophyNames = setupTrophies.getTrophyNames();
-        trophyDescriptions = setupTrophies.getTrophyDescriptions();
-
-        for (int i = 0; i < trophyNames.size(); i++) {
-            ContentValues trophyValues = new ContentValues();
-            trophyValues.put(TrophyContract.Columns.TROPHY_NAME, trophyNames.get(i));
-            trophyValues.put(TrophyContract.Columns.TROPHY_DESCRIPTION, trophyDescriptions.get(i));
-            trophyValues.put(TrophyContract.Columns.ACHIEVED, 0);
-
-            mContentResolver.insert(TrophyContract.URI_TABLE, trophyValues);
-        }
+        changeAppIcon();
 
         startActivity(new Intent(SetupPetActivity.this, MainActivity.class));
     }
 
-    public static void petSelected(String selected) {
+    private void changeAppIcon() {
+
+        switch (petType) {
+
+            case R.drawable.frog:
+                getPackageManager().setComponentEnabledSetting(
+                        new ComponentName("com.brianmsurgenor.honoursproject", "com.brianmsurgenor.honoursproject.Main.MainActivity-Frog"),
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                break;
+
+            case R.drawable.puppy:
+                getPackageManager().setComponentEnabledSetting(
+                        new ComponentName("com.brianmsurgenor.honoursproject", "com.brianmsurgenor.honoursproject.Main.MainActivity-Puppy"),
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                break;
+
+        }
+
+    }
+
+    public static void petSelected(int selected) {
         selectedPet = selected;
     }
 

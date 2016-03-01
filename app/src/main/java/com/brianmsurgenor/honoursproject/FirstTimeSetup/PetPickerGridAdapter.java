@@ -34,7 +34,7 @@ public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdap
 
         //Add items to mItems
         mItems.add(R.drawable.frog); // graphics would be named pet1/pet2 etc in future
-        mItems.add(R.drawable.ic_trophy_winner);
+        mItems.add(R.drawable.puppy);
         mItems.add(R.drawable.ic_trophy_loser);
         mItems.add(R.drawable.pets10);
 
@@ -68,10 +68,10 @@ public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdap
                     Toast.makeText(mContext.getApplicationContext(), id + "Pet celebration graphic to be " +
                             "played", Toast.LENGTH_SHORT).show();
 
-                    SetupPetActivity.petSelected("" + id);
+                    SetupPetActivity.petSelected(id);
                 } else {
                     selected = false;
-                    SetupPetActivity.petSelected(null);
+                    SetupPetActivity.petSelected(0);
                     viewHolder.petBackground.setBackgroundColor(mContext.getResources().
                             getColor(R.color.primaryBackground));
                 }

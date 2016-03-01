@@ -9,11 +9,15 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
+import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.FirstTimeSetup.SetupPetActivity;
 import com.brianmsurgenor.honoursproject.FirstTimeSetup.SetupUserActivity;
 import com.brianmsurgenor.honoursproject.FoodDiary.MealEntryActivity;
 import com.brianmsurgenor.honoursproject.R;
+import com.brianmsurgenor.honoursproject.Trophy.Trophies;
+
+import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
 
@@ -29,9 +33,7 @@ public class MainActivity extends BaseActivity {
 
         mContentResolver = getContentResolver();
 
-        /*
-         * Set up the tabs inside the Main Activity
-         */
+        //Set up the tabs inside the Main Activity
         tabs = (TabLayout) findViewById(R.id.tabs);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         TabsPagerAdapter adapter = new TabsPagerAdapter(getSupportFragmentManager());
@@ -54,6 +56,9 @@ public class MainActivity extends BaseActivity {
             if(customColour != 0) {
                 changeTabsColour(customColour);
             }
+
+            //Check that there are no new trophies to be added to the database
+            trophyChecker();
 
         } else if(check == 1) {
             //Send the user to the pet set up screen
@@ -92,6 +97,25 @@ public class MainActivity extends BaseActivity {
         } else {
             return 2;
         }
+    }
+
+    private void trophyChecker() {
+        int trophyCount = 0;
+        ArrayList<String> trophyNames = new ArrayList<>();
+        String[] projection = {TrophyContract.Columns.TROPHY_NAME};
+        mCursor = mContentResolver.query(TrophyContract.URI_TABLE,projection,null,null,null);
+        if(mCursor.moveToFirst()) {
+            do {
+                trophyNames.add(mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_NAME)));
+                trophyCount++;
+            } while(mCursor.moveToNext());
+        }
+
+        Trophies trophies = new Trophies(getApplicationContext());
+        if(trophyCount != trophies.numberOfTrophies()) {
+            trophies.updateTrophiesDatabase(trophyNames);
+        }
+
     }
 
     /**

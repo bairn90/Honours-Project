@@ -1,14 +1,18 @@
 package com.brianmsurgenor.honoursproject.FoodDiary;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Spinner;
@@ -44,12 +48,12 @@ public class MealEntryActivity extends BaseActivity {
         txtMealType = (Spinner) findViewById(R.id.mealType);
 
         Bundle extras = getIntent().getExtras();
-        if(extras != null) {
+        if (extras != null) {
             mealID = extras.getInt(MealDateContract.Columns._ID);
             mealType = extras.getString(MealDateContract.Columns.MEAL_TYPE);
 
-            for(int i=1; i<txtMealType.getCount();i++) {
-                if(txtMealType.getItemAtPosition(i).toString().equals(mealType)) {
+            for (int i = 1; i < txtMealType.getCount(); i++) {
+                if (txtMealType.getItemAtPosition(i).toString().equals(mealType)) {
                     mealTypeIndex = i;
                     break;
                 }
@@ -71,7 +75,7 @@ public class MealEntryActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(mealID == 0) {
+        if (mealID == 0) {
             getMenuInflater().inflate(R.menu.meal_entry_menu, menu);
         } else {
             getMenuInflater().inflate(R.menu.edit_meal_entry_menu, menu);
@@ -110,7 +114,7 @@ public class MealEntryActivity extends BaseActivity {
             Uri uri = MealContract.Meal.buildMealUri(mealID + "");
             mContentResolver.delete(uri, null, null);
 
-            for(int i=0;i<foodEaten.size();i++) {
+            for (int i = 0; i < foodEaten.size(); i++) {
                 values.put(MealContract.Columns.MEAL_ID, mealID);
                 values.put(MealContract.Columns.MEAL_ITEM, foodEaten.get(i));
                 values.put(MealContract.Columns.MEAL_CATEGORY, foodCategories.get(i));
@@ -123,7 +127,7 @@ public class MealEntryActivity extends BaseActivity {
 
             mContentResolver.update(MealDateContract.URI_TABLE, values, where, null);
         } else {
-            if(foodEaten.isEmpty()) {
+            if (foodEaten.isEmpty()) {
                 Toast.makeText(MealEntryActivity.this, "You can't save a meal with no food!", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(MealEntryActivity.this, "What are you eating? Lunch? Dinner? Breakfast?", Toast.LENGTH_LONG).show();
@@ -166,7 +170,7 @@ public class MealEntryActivity extends BaseActivity {
         if (!foodEaten.isEmpty() && !txtMealType.getSelectedItem().toString().equals("Meal")) {
             saveMealData();
         } else {
-            if(foodEaten.isEmpty()) {
+            if (foodEaten.isEmpty()) {
                 Toast.makeText(MealEntryActivity.this, "You can't save a meal with no food!", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(MealEntryActivity.this, "What are you eating? Lunch? Dinner? Breakfast?", Toast.LENGTH_LONG).show();
@@ -181,7 +185,7 @@ public class MealEntryActivity extends BaseActivity {
 
         Calendar c = Calendar.getInstance();
         String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
-        String time = c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+        long time = c.getTimeInMillis();
 
         //Insert for meal date
         ContentValues values = new ContentValues();
@@ -197,7 +201,7 @@ public class MealEntryActivity extends BaseActivity {
 
         //Insert foods
 
-        for(int i=0;i<foodEaten.size();i++) {
+        for (int i = 0; i < foodEaten.size(); i++) {
             values = new ContentValues();
             values.put(MealContract.Columns.MEAL_ID, mealID);
             values.put(MealContract.Columns.MEAL_ITEM, foodEaten.get(i));
@@ -205,16 +209,77 @@ public class MealEntryActivity extends BaseActivity {
             mContentResolver.insert(MealContract.URI_TABLE, values);
         }
 
+        switch (txtMealType.getSelectedItem().toString()) {
+
+            case "Breakfast":
+                getAndSetNextNotification("Lunch");
+                break;
+
+            case "Lunch":
+                getAndSetNextNotification("Dinner");
+                break;
+
+            case "Dinner":
+                getAndSetNextNotification("Breakfast");
+                break;
+        }
+
+    }
+
+    private void getAndSetNextNotification(String meal) {
+
+        long avgTime = 0;
+        int count = 0;
+        String[] projection = {MealDateContract.Columns.MEAL_TIME};
+        String where = MealDateContract.Columns.MEAL_TYPE + " = '" + meal + "'";
+        Cursor mCursor = mContentResolver.query(MealDateContract.URI_TABLE, projection, where, null, null);
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH);
+        int year = c.get(Calendar.YEAR);
+
+        if (meal.equals("Breakfast")) {
+            day++;
+        }
+
+
+        if (mCursor.moveToFirst()) {
+            do {
+//                avgTime += mCursor.getLong(mCursor.getColumnIndex(MealDateContract.Columns.MEAL_TIME));
+                c.setTimeInMillis(mCursor.getLong(mCursor.getColumnIndex(MealDateContract.Columns.MEAL_TIME)));
+                c.set(year, month, day);
+                avgTime += c.getTimeInMillis();
+                Log.d("Avg", "" + c.getTimeInMillis());
+                count++;
+            } while (mCursor.moveToNext());
+        }
+
+        mCursor.close();
+
+        if (count != 0) {
+            avgTime = avgTime / count;
+
+            Intent intent = new Intent(this,MealNotifReceiver.class);
+            intent.putExtra(MealDateContract.Columns.MEAL_TYPE, meal);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC, avgTime, pendingIntent);
+
+            Log.d("Note time", avgTime + "");
+
+        }
+
     }
 
     public static void selectedFood(boolean selected, String selectedFood, String foodCategory) {
 
-        if(selected) {
+        if (selected) {
             foodEaten.add(selectedFood);
             foodCategories.add(foodCategory);
         } else {
-            for(int i=0;i<foodEaten.size();i++) {
-                if(foodEaten.get(i).equals(selectedFood)) {
+            for (int i = 0; i < foodEaten.size(); i++) {
+                if (foodEaten.get(i).equals(selectedFood)) {
                     foodEaten.remove(i);
                     foodCategories.remove(i);
                     return;

@@ -9,18 +9,56 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
             android:name=".Main.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:targetActivity=".Main.MainActivity">
+
+            <!-- <intent-filter> -->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!-- </intent-filter> -->
+        </activity>
+
+        <activity-alias
+            android:name=".Main.MainActivity-Original"
+            android:enabled="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:targetActivity=".Main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+        <activity-alias
+            android:name=".Main.MainActivity-Frog"
+            android:enabled="false"
+            android:icon="@drawable/frog"
+            android:label="@string/app_name"
+            android:targetActivity=".Main.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name=".Main.MainActivity-Puppy"
+            android:enabled="false"
+            android:icon="@drawable/puppy"
+            android:label="@string/app_name"
+            android:targetActivity=".Main.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
         <activity
             android:name=".FirstTimeSetup.SetupUserActivity"
             android:label="@string/title_activity_setup_user" />
@@ -36,9 +74,13 @@
         <activity
             android:name=".FoodDiary.FoodDiaryActivity"
             android:label="@string/title_activity_food_diary" />
+        <activity
+            android:name=".Exercise.ExerciseDiaryActivity"
+            android:label="@string/title_exercise_activity" />
 
-        <activity android:name=".Exercise.ExerciseDiaryActivity"
-            android:label="@string/title_exercise_activity"/>
+        <activity android:name=".Exercise.ExerciseEntryActivity" />
+
+        <receiver android:name=".FoodDiary.MealNotifReceiver"/>
 
         <provider
             android:name=".Database.DBProvider"
