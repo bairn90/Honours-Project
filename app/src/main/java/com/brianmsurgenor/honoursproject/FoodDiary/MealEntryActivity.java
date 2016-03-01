@@ -2,6 +2,7 @@ package com.brianmsurgenor.honoursproject.FoodDiary;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -15,7 +16,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
@@ -24,6 +28,7 @@ import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
 import com.brianmsurgenor.honoursproject.Main.MainActivity;
 import com.brianmsurgenor.honoursproject.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -34,11 +39,15 @@ public class MealEntryActivity extends BaseActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private Spinner txtMealType;
+    private TextView txtMealTime;
     private String mealType;
     private int mealTypeIndex;
     private static ArrayList<String> foodEaten;
     private static ArrayList<String> foodCategories;
     private int mealID = 0;
+    private long mealTime;
+    private Calendar calendar;
+    private SimpleDateFormat formating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +55,21 @@ public class MealEntryActivity extends BaseActivity {
         super.addContentView(R.layout.activity_meal_entry);
 
         txtMealType = (Spinner) findViewById(R.id.mealType);
+        txtMealTime = (TextView) findViewById(R.id.mealTime);
+        formating = new SimpleDateFormat("HH:mm");
+
+        calendar = Calendar.getInstance();
+        mealTime = calendar.getTimeInMillis();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mealID = extras.getInt(MealDateContract.Columns._ID);
-            mealType = extras.getString(MealDateContract.Columns.MEAL_TYPE);
 
+            if(!extras.getBoolean("Notification")) {
+                mealID = extras.getInt(MealDateContract.Columns._ID);
+                mealTime = extras.getLong(MealDateContract.Columns.MEAL_TIME);
+            }
+
+            mealType = extras.getString(MealDateContract.Columns.MEAL_TYPE);
             for (int i = 1; i < txtMealType.getCount(); i++) {
                 if (txtMealType.getItemAtPosition(i).toString().equals(mealType)) {
                     mealTypeIndex = i;
@@ -59,7 +77,10 @@ public class MealEntryActivity extends BaseActivity {
                 }
             }
             txtMealType.setSelection(mealTypeIndex);
+
+            calendar.setTimeInMillis(mealTime);
         }
+        txtMealTime.setText("" + formating.format(calendar.getTime()));
 
         mContentResolver = getContentResolver();
         recyclerView = (RecyclerView) findViewById(R.id.food_picker_recycler_view);
@@ -106,9 +127,32 @@ public class MealEntryActivity extends BaseActivity {
         return true;
     }
 
+    public void setMealTime(View v) {
+
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                c.set(Calendar.MINUTE, minute);
+                mealTime = c.getTimeInMillis();
+
+                txtMealTime.setText("" + formating.format(c.getTime()));
+            }
+        };
+
+        TimePickerDialog timePicker = new TimePickerDialog(this, android.app.AlertDialog.THEME_HOLO_LIGHT,
+                timeListener, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+
+        timePicker.show();
+    }
+
     private void updateMeal() {
 
-        if (!foodEaten.isEmpty() || !txtMealType.getSelectedItem().toString().equals("Meal")) {
+        if (!foodEaten.isEmpty() && !txtMealType.getSelectedItem().toString().equals("Meal")) {
 
             ContentValues values = new ContentValues();
             Uri uri = MealContract.Meal.buildMealUri(mealID + "");
@@ -123,6 +167,7 @@ public class MealEntryActivity extends BaseActivity {
 
             values = new ContentValues();
             values.put(MealDateContract.Columns.MEAL_TYPE, txtMealType.getSelectedItem().toString());
+            values.put(MealDateContract.Columns.MEAL_TIME, mealTime);
             String where = MealDateContract.Columns._ID + " = " + mealID;
 
             mContentResolver.update(MealDateContract.URI_TABLE, values, where, null);
@@ -135,6 +180,7 @@ public class MealEntryActivity extends BaseActivity {
             return;
         }
 
+        Toast.makeText(MealEntryActivity.this, "Meal updated!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(MealEntryActivity.this, FoodDiaryActivity.class));
 
     }
@@ -169,6 +215,7 @@ public class MealEntryActivity extends BaseActivity {
 
         if (!foodEaten.isEmpty() && !txtMealType.getSelectedItem().toString().equals("Meal")) {
             saveMealData();
+            Toast.makeText(MealEntryActivity.this, "Meal saved!", Toast.LENGTH_SHORT).show();
         } else {
             if (foodEaten.isEmpty()) {
                 Toast.makeText(MealEntryActivity.this, "You can't save a meal with no food!", Toast.LENGTH_LONG).show();
@@ -183,14 +230,14 @@ public class MealEntryActivity extends BaseActivity {
 
     private void saveMealData() {
 
-        Calendar c = Calendar.getInstance();
-        String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
-        long time = c.getTimeInMillis();
+        int month = calendar.get(Calendar.MONTH);
+        month++;
+        String date = calendar.get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + calendar.get(Calendar.YEAR);
 
         //Insert for meal date
         ContentValues values = new ContentValues();
         values.put(MealDateContract.Columns.MEAL_DATE, date);
-        values.put(MealDateContract.Columns.MEAL_TIME, time);
+        values.put(MealDateContract.Columns.MEAL_TIME, mealTime);
         values.put(MealDateContract.Columns.MEAL_TYPE, txtMealType.getSelectedItem().toString());
 
         Uri returned = mContentResolver.insert(MealDateContract.URI_TABLE, values);
@@ -258,15 +305,12 @@ public class MealEntryActivity extends BaseActivity {
 
         if (count != 0) {
             avgTime = avgTime / count;
-
             Intent intent = new Intent(this,MealNotifReceiver.class);
             intent.putExtra(MealDateContract.Columns.MEAL_TYPE, meal);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
             AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC, avgTime, pendingIntent);
-
-            Log.d("Note time", avgTime + "");
 
         }
 

@@ -24,6 +24,8 @@ public class MealNotifReceiver extends BroadcastReceiver {
 
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent newIntent = new Intent(context, MealEntryActivity.class);
+        newIntent.putExtra(MealDateContract.Columns.MEAL_TYPE, meal);
+        newIntent.putExtra("Notification", true);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, newIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder mBuilder =

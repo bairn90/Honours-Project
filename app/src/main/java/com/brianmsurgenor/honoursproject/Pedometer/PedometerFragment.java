@@ -32,16 +32,17 @@ import java.util.logging.Logger;
 
 public class PedometerFragment extends Fragment implements View.OnClickListener {
 
-    private static TextView steps;
-    private TextView miles;
-    private TextView stepsPerHour;
+    private static TextView txtSteps;
+    private static TextView txtMiles;
+    private TextView txtStepsPerHour;
     private TextView milesPerHour;
     private TextView calories;
     private static Button startStop;
     private static int customColour = 0;
     private ContentResolver mContentResolver;
     private Cursor mCursor;
-
+    private static final double stepInch = 25.00;
+    private static final double inchesInMile = 63359.00;
 
     /**
      * Copied
@@ -51,6 +52,7 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
     public static IStepService mService = null;
     public static Intent stepServiceIntent = null;
     private static int sensitivity = 250;
+    private static int currentSteps = 0;
     private View view;
     private static final Logger logger = Logger.getLogger(PedometerFragment.class.getSimpleName());
 
@@ -75,9 +77,9 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
 
         view = inflater.inflate(R.layout.fragment_pedometer, container, false);
 
-        steps = (TextView) view.findViewById(R.id.stepCount);
-        miles = (TextView) view.findViewById(R.id.mileCount);
-        stepsPerHour = (TextView) view.findViewById(R.id.stepsPerHour);
+        txtSteps = (TextView) view.findViewById(R.id.stepCount);
+        txtMiles = (TextView) view.findViewById(R.id.mileCount);
+        txtStepsPerHour = (TextView) view.findViewById(R.id.stepsPerHour);
         milesPerHour = (TextView) view.findViewById(R.id.milesPerHour);
         calories = (TextView) view.findViewById(R.id.caloriesBurned);
 
@@ -92,7 +94,8 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
             startStop.setText("Stop Pedometer");
         }
 
-        steps.setText(getPedometerStats() + "");
+        currentSteps = getPedometerStats();
+        txtSteps.setText(currentSteps + "");
 
         return view;
     }
@@ -125,7 +128,9 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
 
     private int getPedometerStats() {
         Calendar c = Calendar.getInstance();
-        String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        month++;
+        String date = c.get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + c.get(Calendar.YEAR);
         String[] projection = {PedometerContract.Columns.STEPS};
         String filter = PedometerContract.Columns.DATE + " = '" + date + "'";
 
@@ -141,21 +146,23 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
     private void updatePedometerDB() {
 
         Calendar c = Calendar.getInstance();
-        String date = c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.MONTH) + "/" + c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        month++;
+        String date = c.get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + c.get(Calendar.YEAR);
         String[] projection = {PedometerContract.Columns.DATE};
         String filter = PedometerContract.Columns.DATE + " = '" + date + "'";
 
         mCursor = mContentResolver.query(PedometerContract.URI_TABLE,projection,filter,null,null);
 
         ContentValues values = new ContentValues();
-        values.put(PedometerContract.Columns.STEPS, steps.getText().toString());
+        values.put(PedometerContract.Columns.STEPS, txtSteps.getText().toString());
 
         if(mCursor.moveToFirst()) {
             mContentResolver.update(PedometerContract.URI_TABLE,values,filter,null);
         } else {
             values.put(PedometerContract.Columns.DATE, date);
-            Uri r = mContentResolver.insert(PedometerContract.URI_TABLE, values);
-            Toast.makeText(getActivity(), r.toString() , Toast.LENGTH_SHORT).show();
+            Uri uri = mContentResolver.insert(PedometerContract.URI_TABLE, values);
+            Toast.makeText(getActivity(), uri.toString() , Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -233,7 +240,12 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
 
         public void handleMessage(Message msg) {
             int current = msg.arg1;
-            steps.setText("" + current);
+            double inches = current * stepInch;
+            logger.info("Inches = " + inches);
+            double miles = inches / inchesInMile;
+            logger.info("Miles = " + miles);
+            txtSteps.setText("" + current);
+            txtMiles.setText(String.format("%.2f",miles));
         }
     };
 
@@ -246,9 +258,9 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
 
         @Override
         public void stepsChanged(int value) throws RemoteException {
-            logger.info("Steps=" + value);
+            logger.info("Steps=" + (currentSteps+value));
             Message msg = handler.obtainMessage();
-            msg.arg1 = value;
+            msg.arg1 = (currentSteps+value);
             handler.sendMessage(msg);
         }
     };

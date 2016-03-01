@@ -1,13 +1,12 @@
 package com.brianmsurgenor.honoursproject.FirstTimeSetup;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Spinner;
@@ -42,8 +41,24 @@ public class SetupUserActivity extends BaseActivity {
     }
 
     public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
+
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int yearDialog, int monthOfYear, int dayOfMonth) {
+                monthOfYear++;
+                DOB = dayOfMonth + "/" + monthOfYear + "/" + yearDialog;
+                txtDOB.setText(DOB);
+            }
+        };
+
+        DatePickerDialog dateDialog = new DatePickerDialog(this, AlertDialog.THEME_HOLO_LIGHT,
+                dateListener, year,month,day);
+        dateDialog.show();
     }
 
     public void saveDetails(View v) {
@@ -69,25 +84,4 @@ public class SetupUserActivity extends BaseActivity {
         return;
     }
 
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            month++;
-            DOB = day + "/" + month + "/" + year;
-            txtDOB.setText(DOB);
-        }
-    }
 }

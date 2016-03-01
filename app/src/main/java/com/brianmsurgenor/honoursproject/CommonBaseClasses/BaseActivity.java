@@ -298,4 +298,5 @@ public class BaseActivity extends AppCompatActivity
                 .setNegativeButton("No", null)
                 .show();
     }
+
 }

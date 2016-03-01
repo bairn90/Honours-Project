@@ -9,16 +9,8 @@ public class Meal {
 
     private int _id;
     private String date, type;
+    private long realTime;
     private ArrayList<String> categories;
-    private boolean mealCardLoaded = false;
-
-    public void setMealCardLoaded() {
-        mealCardLoaded = true;
-    }
-
-    public boolean isMealCardLoaded() {
-        return mealCardLoaded;
-    }
 
     public int getId() {
         return _id;
@@ -50,5 +42,13 @@ public class Meal {
 
     public void setCategories(ArrayList<String> categories) {
         this.categories = categories;
+    }
+
+    public long getRealTime() {
+        return realTime;
+    }
+
+    public void setRealTime(long realTime) {
+        this.realTime = realTime;
     }
 }
