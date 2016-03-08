@@ -23,9 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.DBContracts.PedometerContract;
+import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.IStepService;
 import com.brianmsurgenor.honoursproject.IStepServiceCallback;
 import com.brianmsurgenor.honoursproject.R;
+import com.brianmsurgenor.honoursproject.Trophy.Trophies;
 
 import java.util.Calendar;
 import java.util.logging.Logger;
@@ -39,10 +41,11 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
     private TextView calories;
     private static Button startStop;
     private static int customColour = 0;
-    private ContentResolver mContentResolver;
+    private static ContentResolver mContentResolver;
     private Cursor mCursor;
     private static final double stepInch = 25.00;
     private static final double inchesInMile = 63359.00;
+    private static Trophies trophyWins;
 
     /**
      * Copied
@@ -60,6 +63,7 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContentResolver = getActivity().getContentResolver();
+        trophyWins = new Trophies(getActivity());
 
         powerManager = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "TESTING");
@@ -165,6 +169,17 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
             Toast.makeText(getActivity(), uri.toString() , Toast.LENGTH_SHORT).show();
         }
 
+        //Check for trophy win
+        String[] trophyProjection = {TrophyContract.Columns.ACHIEVED};
+        String where = TrophyContract.Columns.TROPHY_NAME + " = '" + Trophies.TrophyDetails.firstWalk[0] + "'";
+        Cursor mCursor = mContentResolver.query(TrophyContract.URI_TABLE, trophyProjection , where, null, null);
+
+        if(mCursor.moveToFirst()) {
+            if(mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns.ACHIEVED)) == 0) {
+                trophyWins.winTrophy(Trophies.TrophyDetails.firstWalk[0], null);
+            }
+        }
+
     }
 
     @Override
@@ -246,6 +261,19 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
             logger.info("Miles = " + miles);
             txtSteps.setText("" + current);
             txtMiles.setText(String.format("%.2f",miles));
+
+            if(miles > 1.0) {
+                //Check for trophy win
+                String[] trophyProjection = {TrophyContract.Columns.ACHIEVED};
+                String where = TrophyContract.Columns.TROPHY_NAME + " = '" + Trophies.TrophyDetails.longWalk[0] + "'";
+                Cursor mCursor = mContentResolver.query(TrophyContract.URI_TABLE, trophyProjection , where, null, null);
+
+                if(mCursor.moveToFirst()) {
+                    if(mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns.ACHIEVED)) == 0) {
+                        trophyWins.winTrophy(Trophies.TrophyDetails.longWalk[0], null);
+                    }
+                }
+            }
         }
     };
 

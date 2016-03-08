@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.R;
@@ -47,7 +48,14 @@ public class PetFragment extends Fragment {
         if(customColour != 0) {
             colourChange(customColour);
         }
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Toast.makeText(getActivity(), "HIHI", Toast.LENGTH_SHORT).show();
     }
 
     public static void colourChange(int colour) {

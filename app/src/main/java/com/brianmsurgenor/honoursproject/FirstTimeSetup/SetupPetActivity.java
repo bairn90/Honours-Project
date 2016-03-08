@@ -53,7 +53,7 @@ public class SetupPetActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.setup_pet_menu, menu);
+        getMenuInflater().inflate(R.menu.setup_menu, menu);
         return true;
     }
 
@@ -61,7 +61,7 @@ public class SetupPetActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.savePet) {
+        if(id == R.id.saveSetup) {
             savePet();
         }
 

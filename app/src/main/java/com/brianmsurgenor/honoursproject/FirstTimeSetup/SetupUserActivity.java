@@ -7,6 +7,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Spinner;
@@ -40,6 +42,24 @@ public class SetupUserActivity extends BaseActivity {
         mContentResolver = getContentResolver();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.setup_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.saveSetup) {
+            saveDetails();
+        }
+
+        return true;
+    }
+
     public void showDatePickerDialog(View v) {
 
         final Calendar c = Calendar.getInstance();
@@ -61,7 +81,7 @@ public class SetupUserActivity extends BaseActivity {
         dateDialog.show();
     }
 
-    public void saveDetails(View v) {
+    public void saveDetails() {
         name = txtName.getText().toString();
         gender = txtGender.getSelectedItem().toString();
 

@@ -58,16 +58,6 @@
                 android:spinnerMode="dialog"
                 android:textSize="20sp" />
 
-
-            <Button
-                android:id="@+id/saveUser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/button"
-                android:onClick="saveDetails"
-                android:text="@string/save" />
-
         </LinearLayout>
 
 

@@ -25,8 +25,10 @@ import android.widget.Toast;
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
+import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.Main.MainActivity;
 import com.brianmsurgenor.honoursproject.R;
+import com.brianmsurgenor.honoursproject.Trophy.Trophies;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class MealEntryActivity extends BaseActivity {
     private int mealID = 0;
     private long mealTime;
     private Calendar calendar;
-    private SimpleDateFormat formating;
+    private SimpleDateFormat formatting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class MealEntryActivity extends BaseActivity {
 
         txtMealType = (Spinner) findViewById(R.id.mealType);
         txtMealTime = (TextView) findViewById(R.id.mealTime);
-        formating = new SimpleDateFormat("HH:mm");
+        formatting = new SimpleDateFormat("HH:mm");
 
         calendar = Calendar.getInstance();
         mealTime = calendar.getTimeInMillis();
@@ -64,7 +66,7 @@ public class MealEntryActivity extends BaseActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
-            if(!extras.getBoolean("Notification")) {
+            if (!extras.getBoolean("Notification")) {
                 mealID = extras.getInt(MealDateContract.Columns._ID);
                 mealTime = extras.getLong(MealDateContract.Columns.MEAL_TIME);
             }
@@ -80,7 +82,7 @@ public class MealEntryActivity extends BaseActivity {
 
             calendar.setTimeInMillis(mealTime);
         }
-        txtMealTime.setText("" + formating.format(calendar.getTime()));
+        txtMealTime.setText("" + formatting.format(calendar.getTime()));
 
         mContentResolver = getContentResolver();
         recyclerView = (RecyclerView) findViewById(R.id.food_picker_recycler_view);
@@ -140,7 +142,7 @@ public class MealEntryActivity extends BaseActivity {
                 c.set(Calendar.MINUTE, minute);
                 mealTime = c.getTimeInMillis();
 
-                txtMealTime.setText("" + formating.format(c.getTime()));
+                txtMealTime.setText("" + formatting.format(c.getTime()));
             }
         };
 
@@ -225,11 +227,11 @@ public class MealEntryActivity extends BaseActivity {
             return;
         }
 
-        startActivity(new Intent(MealEntryActivity.this, MainActivity.class));
     }
 
     private void saveMealData() {
 
+        boolean greenTrophyCheck = true;
         int month = calendar.get(Calendar.MONTH);
         month++;
         String date = calendar.get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + calendar.get(Calendar.YEAR);
@@ -254,8 +256,13 @@ public class MealEntryActivity extends BaseActivity {
             values.put(MealContract.Columns.MEAL_ITEM, foodEaten.get(i));
             values.put(MealContract.Columns.MEAL_CATEGORY, foodCategories.get(i));
             mContentResolver.insert(MealContract.URI_TABLE, values);
+
+            if (!foodCategories.equals("Green")) {
+                greenTrophyCheck = false;
+            }
         }
 
+        //Set up the next meal notification based on the meal that was just entered
         switch (txtMealType.getSelectedItem().toString()) {
 
             case "Breakfast":
@@ -269,6 +276,32 @@ public class MealEntryActivity extends BaseActivity {
             case "Dinner":
                 getAndSetNextNotification("Breakfast");
                 break;
+        }
+
+        //Check for trophy win
+        Trophies trophies = new Trophies(this);
+        String[] projection = {TrophyContract.Columns.ACHIEVED, TrophyContract.Columns.TROPHY_NAME};
+        String where = TrophyContract.Columns.TROPHY_NAME + " = '" + Trophies.TrophyDetails.firstMeal[0] + "' OR " +
+                TrophyContract.Columns.TROPHY_NAME + " = '" + Trophies.TrophyDetails.greenMeal[0] + "'";
+        Cursor mCursor = mContentResolver.query(TrophyContract.URI_TABLE, projection, where, null, null);
+
+        if (mCursor.moveToFirst()) {
+            if (mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns.ACHIEVED)) == 0) {
+                temp = mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_NAME));
+
+                trophies.winTrophy(temp, MainActivity.class);
+            }
+
+            if(greenTrophyCheck) {
+                mCursor.moveToNext();
+                if (mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns.ACHIEVED)) == 0) {
+                    temp = mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_NAME));
+                    trophies.winTrophy(temp, MainActivity.class);
+                }
+            }
+
+        } else {
+            startActivity(new Intent(this, MainActivity.class));
         }
 
     }
@@ -305,13 +338,12 @@ public class MealEntryActivity extends BaseActivity {
 
         if (count != 0) {
             avgTime = avgTime / count;
-            Intent intent = new Intent(this,MealNotifReceiver.class);
+            Intent intent = new Intent(this, MealNotifReceiver.class);
             intent.putExtra(MealDateContract.Columns.MEAL_TYPE, meal);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
-            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC, avgTime, pendingIntent);
-
         }
 
     }

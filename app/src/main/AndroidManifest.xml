@@ -17,8 +17,8 @@
             android:targetActivity=".Main.MainActivity">
 
             <!-- <intent-filter> -->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
 
@@ -77,10 +77,9 @@
         <activity
             android:name=".Exercise.ExerciseDiaryActivity"
             android:label="@string/title_exercise_activity" />
-
         <activity android:name=".Exercise.ExerciseEntryActivity" />
 
-        <receiver android:name=".FoodDiary.MealNotifReceiver"/>
+        <receiver android:name=".FoodDiary.MealNotifReceiver" />
 
         <provider
             android:name=".Database.DBProvider"

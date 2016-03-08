@@ -10,9 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.R;
+import com.easyandroidanimations.library.Animation;
+import com.easyandroidanimations.library.BounceAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +66,10 @@ public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdap
                     unselectAll();
                     viewHolder.petBackground.setBackgroundColor(Color.YELLOW);
 
-                    Toast.makeText(mContext.getApplicationContext(), id + "Pet celebration graphic to be " +
-                            "played", Toast.LENGTH_SHORT).show();
+                    new BounceAnimation(viewHolder.imgThumbnail)
+                            .setNumOfBounces(3)
+                            .setDuration(Animation.DURATION_SHORT)
+                            .animate();
 
                     SetupPetActivity.petSelected(id);
                 } else {
