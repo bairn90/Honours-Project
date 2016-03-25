@@ -64,6 +64,12 @@ public class Trophies {
         trophyNames.add(TrophyDetails.longWalk[0]);
         trophyDescriptions.add(TrophyDetails.longWalk[1]);
 
+        trophyNames.add(TrophyDetails.y[0]);
+        trophyDescriptions.add(TrophyDetails.y[1]);
+
+        trophyNames.add(TrophyDetails.y[0]);
+        trophyDescriptions.add(TrophyDetails.y[1]);
+
     }
 
     public int numberOfTrophies() {

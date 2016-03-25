@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.AppConstants;
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
@@ -24,9 +25,9 @@ import java.util.List;
  */
 public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.ViewHolder> {
 
-    private List<Integer> foodPics;
-    private List<String> foodCategories, loadedFoods;
-    private List<Boolean> loadedFoodPicks;
+    private List<Food> foods;
+    private List<String> loadedFoods;
+//    private List<Boolean> loadedFoodPicks;
     private List<LinearLayout> backgroundList;
     private Context mContext;
     private AppConstants appConstants;
@@ -36,16 +37,14 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
         super();
 
         appConstants = new AppConstants();
-        foodPics = new ArrayList<>();
-        foodCategories = new ArrayList<>();
+        foods = new ArrayList<>();
         loadedFoods = new ArrayList<>();
-        loadedFoodPicks = new ArrayList<>();
+//        loadedFoodPicks = new ArrayList<>();
         backgroundList = new ArrayList<>();
         mContext = context;
         this.mealID = mealID;
 
-        foodPics = appConstants.getFoodPics();
-        foodCategories = appConstants.getFoodCategories();
+        foods = appConstants.getFoods();
         if(mealID != 0) {
             loadFoods();
         }
@@ -61,9 +60,11 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
 
-        final int id = foodPics.get(i);
-        final String foodCategory = foodCategories.get(i);
+        final int id = foods.get(i).getPicture();
+        final String foodCategory = foods.get(i).getCategory();
+        boolean selected = false;
         viewHolder.imgThumbnail.setImageResource(id);
+        viewHolder.txtName.setText(foods.get(i).getName());
         backgroundList.add(viewHolder.foodBackground);
 
         /*
@@ -75,22 +76,24 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
             for (String food: loadedFoods) {
                 if(food.equals(id + "")) {
                     viewHolder.foodBackground.setBackgroundColor(Color.YELLOW);
+                    selected = true;
                     MealEntryActivity.selectedFood(true, "" + id, foodCategory);
                 }
             }
         }
 
+        final boolean finalSelected = selected;
         viewHolder.foodHolder.setOnClickListener(new View.OnClickListener() {
-            boolean selected = false;
+            boolean clickSelected = finalSelected;
 
             @Override
             public void onClick(View v) {
-                if(!selected) {
-                    selected = true;
+                if(!clickSelected) {
+                    clickSelected = true;
                     viewHolder.foodBackground.setBackgroundColor(Color.YELLOW);
                     MealEntryActivity.selectedFood(true,"" + id, foodCategory);
                 } else {
-                    selected = false;
+                    clickSelected = false;
                     viewHolder.foodBackground.setBackgroundColor(mContext.getResources().
                             getColor(R.color.primaryBackground));
                     MealEntryActivity.selectedFood(false, "" + id, foodCategory);
@@ -120,12 +123,13 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return foodPics.size();
+        return foods.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView imgThumbnail;
+        public TextView txtName;
         public CardView foodHolder;
         public LinearLayout foodBackground;
 
@@ -134,6 +138,7 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
             foodHolder = (CardView) itemView.findViewById(R.id.item_CardView);
             foodBackground = (LinearLayout) itemView.findViewById(R.id.linearItem);
             imgThumbnail = (ImageView) itemView.findViewById(R.id.itemImage);
+            txtName = (TextView) itemView.findViewById(R.id.itemName);
         }
     }
 }

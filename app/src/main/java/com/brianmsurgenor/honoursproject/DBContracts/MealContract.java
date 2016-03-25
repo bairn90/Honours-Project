@@ -17,7 +17,6 @@ public class MealContract {
         String MEAL_CATEGORY = "meal_category";
     }
 
-
     public static final String CONTENT_AUTHORITY = "com.brianmsurgenor.honoursproject.provider";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     private static final String PATH_ARCHIVES = "meal";

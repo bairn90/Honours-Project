@@ -53,12 +53,12 @@ public class AppDatabase extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + Tables.USER + "("
                 + UserContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + UserContract.Columns.USERNAME + " TEXT NOT NULL,"
-                + UserContract.Columns.DOB + " TEXT NOT NULL,"
-                + UserContract.Columns.GENDER + " TEXT NOT NULL,"
+                + UserContract.Columns.DOB + " TEXT,"
+                + UserContract.Columns.GENDER + " TEXT,"
                 + UserContract.Columns.HEIGHT + " TEXT,"
                 + UserContract.Columns.WEIGHT + " TEXT,"
-                + UserContract.Columns.PET_NAME + " TEXT,"
-                + UserContract.Columns.PET_TYPE + " INTEGER,"
+                + UserContract.Columns.PET_NAME + " TEXT NOT NULL,"
+                + UserContract.Columns.PET_TYPE + " INTEGER NOT NULL,"
                 + UserContract.Columns.CUSTOM_COLOUR + " INTEGER)");
 
         db.execSQL("CREATE TABLE " + Tables.MEAL_DATE + "("

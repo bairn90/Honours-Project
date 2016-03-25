@@ -63,9 +63,6 @@
             android:name=".FirstTimeSetup.SetupUserActivity"
             android:label="@string/title_activity_setup_user" />
         <activity
-            android:name=".FirstTimeSetup.SetupPetActivity"
-            android:label="@string/title_activity_setup_pet" />
-        <activity
             android:name=".FoodDiary.MealEntryActivity"
             android:label="@string/title_activity_meal_entry" />
         <activity

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
+import com.brianmsurgenor.honoursproject.FoodDiary.Food;
 import com.brianmsurgenor.honoursproject.R;
 
 import java.util.ArrayList;
@@ -14,8 +15,7 @@ import java.util.ArrayList;
  */
 public class AppConstants {
     
-    private ArrayList foodPics;
-    private ArrayList foodCategories;
+    private ArrayList<Food> foods;
     private ArrayList sports;
     private final static String GREEN = "green";
     private final static String ORANGE = "orange";
@@ -40,45 +40,64 @@ public class AppConstants {
     }
 
     public AppConstants() {
-        foodPics = new ArrayList();
-        foodCategories = new ArrayList();
+        foods = new ArrayList();
         sports = new ArrayList();
 
         setSports();
-        setFoodPics();
-        setFoodCategories();
+        setFoods();
     }
 
     public void setSports() {
 
     }
 
-    public void setFoodPics() {
-        foodPics.add(R.drawable.fizzy_drink);
-        foodPics.add(R.drawable.water);
-        foodPics.add(R.drawable.bacon);
-        foodPics.add(R.drawable.fruit);
-        foodPics.add(R.drawable.french_fries);
-        foodPics.add(R.drawable.cheese);
-        foodPics.add(R.drawable.sweets);
+    public void setFoods() {
+
+        Food food = new Food();
+        food.setPicture(R.drawable.fizzy_drink);
+        food.setName("Fizzy Drink");
+        food.setCategory(RED);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.water);
+        food.setName("Water");
+        food.setCategory(GREEN);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.bacon);
+        food.setName("Bacon");
+        food.setCategory(RED);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.fruit);
+        food.setName("Fruit");
+        food.setCategory(GREEN);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.french_fries);
+        food.setName("Chips");
+        food.setCategory(RED);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.cheese);
+        food.setName("Cheese");
+        food.setCategory(ORANGE);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.sweets);
+        food.setName("Chocolate");
+        food.setCategory(RED);
+        foods.add(food);
     }
 
-    public void setFoodCategories() {
-        foodCategories.add(RED);
-        foodCategories.add(GREEN);
-        foodCategories.add(RED);
-        foodCategories.add(GREEN);
-        foodCategories.add(RED);
-        foodCategories.add(ORANGE);
-        foodCategories.add(RED);
-    }
-
-    public ArrayList getFoodPics() {
-        return foodPics;
-    }
-
-    public ArrayList getFoodCategories() {
-        return foodCategories;
+    public ArrayList getFoods() {
+        return foods;
     }
 
     public ArrayList getSports() {

@@ -188,8 +188,7 @@ public class BaseActivity extends AppCompatActivity
         }
 
         /*
-         * customColour is the initially-selected color to be shown in the rectangle on the left of the arrow.
-         * for example, 0xff000000 is black, 0xff0000ff is blue. Please be aware of the initial 0xff which is the alpha.
+         * customColour is the initially-selected color to be shown
          */
         AmbilWarnaDialog dialog = new AmbilWarnaDialog(this, customColour, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override

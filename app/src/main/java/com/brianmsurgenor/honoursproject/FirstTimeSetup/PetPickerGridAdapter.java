@@ -71,10 +71,10 @@ public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdap
                             .setDuration(Animation.DURATION_SHORT)
                             .animate();
 
-                    SetupPetActivity.petSelected(id);
+                    SetupUserActivity.petSelected(id);
                 } else {
                     selected = false;
-                    SetupPetActivity.petSelected(0);
+                    SetupUserActivity.petSelected(0);
                     viewHolder.petBackground.setBackgroundColor(mContext.getResources().
                             getColor(R.color.primaryBackground));
                 }

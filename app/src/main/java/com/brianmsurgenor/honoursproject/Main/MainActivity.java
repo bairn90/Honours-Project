@@ -11,7 +11,6 @@ import android.view.View;
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
-import com.brianmsurgenor.honoursproject.FirstTimeSetup.SetupPetActivity;
 import com.brianmsurgenor.honoursproject.FirstTimeSetup.SetupUserActivity;
 import com.brianmsurgenor.honoursproject.FoodDiary.MealEntryActivity;
 import com.brianmsurgenor.honoursproject.R;
@@ -61,10 +60,6 @@ public class MainActivity extends BaseActivity {
             trophyChecker();
 
         } else if(check == 1) {
-            //Send the user to the pet set up screen
-            MainActivity.this.finish();
-            startActivity(new Intent(MainActivity.this, SetupPetActivity.class));
-        } else {
             //Send the user to the first set up screen
             MainActivity.this.finish();
             startActivity(new Intent(MainActivity.this, SetupUserActivity.class));
@@ -85,17 +80,11 @@ public class MainActivity extends BaseActivity {
 
         //If there is data retrieve it otherwise return false to go to user setup
         if (mCursor.moveToFirst()) {
-
-            //Data found but no pet data
-            if (mCursor.getString(mCursor.getColumnIndex(UserContract.Columns.PET_NAME)) == null) {
-                return 1;
-            }
-
-            //Setup has already been fully complete
+            //Setup has already been fully complete so check if they have changed the app colours
             customColour = mCursor.getInt(mCursor.getColumnIndex(UserContract.Columns.CUSTOM_COLOUR));
             return 0;
         } else {
-            return 2;
+            return 1;
         }
     }
 

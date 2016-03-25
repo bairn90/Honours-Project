@@ -11,10 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.R;
+import com.easyandroidanimations.library.Animation;
+import com.easyandroidanimations.library.BounceAnimation;
+import com.easyandroidanimations.library.FlipVerticalAnimation;
+import com.easyandroidanimations.library.RotationAnimation;
+import com.easyandroidanimations.library.ShakeAnimation;
+import com.easyandroidanimations.library.SlideInAnimation;
+
+import java.util.Random;
 
 public class PetFragment extends Fragment {
 
@@ -55,7 +62,36 @@ public class PetFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(getActivity(), "HIHI", Toast.LENGTH_SHORT).show();
+
+
+        Random random = new Random();
+        int lower = 0;
+        int upper = 5;
+        int randomNum = random.nextInt(upper - lower) + lower;
+
+        switch (randomNum) {
+            case 0: new BounceAnimation(pet).animate();
+                break;
+
+            case 1: new SlideInAnimation(pet)
+                    .setDirection(Animation.DIRECTION_UP)
+                    .animate();
+                break;
+
+            case 2: new ShakeAnimation(pet)
+                    .setNumOfShakes(5)
+                    .setDuration(Animation.DURATION_SHORT)
+                    .animate();
+                break;
+
+            case 3: new FlipVerticalAnimation(pet).animate();
+                break;
+
+            case 4: new RotationAnimation(pet)
+                    .setPivot(RotationAnimation.PIVOT_TOP_LEFT)
+                    .animate();
+                break;
+        }
     }
 
     public static void colourChange(int colour) {
