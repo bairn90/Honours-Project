@@ -46,10 +46,6 @@
         </item>
         <item android:title="Settings">
             <menu>
-                <item
-                    android:id="@+id/Settings"
-                    android:icon="@drawable/ic_settings_black_24dp"
-                    android:title="All Settings" />
                 <item android:id="@+id/ColourChange"
                     android:icon="@drawable/ic_action_brush"
                     android:title="Customise My Colours"/>

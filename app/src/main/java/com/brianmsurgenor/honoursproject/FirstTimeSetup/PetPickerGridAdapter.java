@@ -34,10 +34,10 @@ public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdap
         mContext = context;
 
         //Add items to mItems
-        mItems.add(R.drawable.frog); // graphics would be named pet1/pet2 etc in future
+        mItems.add(R.drawable.frog);
         mItems.add(R.drawable.puppy);
-        mItems.add(R.drawable.ic_trophy_loser);
-        mItems.add(R.drawable.pets10);
+        mItems.add(R.drawable.cat);
+        mItems.add(R.drawable.turtle);
 
     }
 

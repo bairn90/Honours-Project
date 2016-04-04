@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/saveMeal"
+        android:id="@+id/save"
         android:icon="@android:drawable/ic_menu_save"
         android:orderInCategory="1"
         app:showAsAction="always"

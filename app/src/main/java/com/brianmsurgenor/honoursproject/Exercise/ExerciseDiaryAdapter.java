@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.brianmsurgenor.honoursproject.DBContracts.PedometerContract;
+import com.brianmsurgenor.honoursproject.DBContracts.ExerciseContract;
 import com.brianmsurgenor.honoursproject.R;
 
 import java.util.ArrayList;
@@ -31,8 +31,8 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
     private ContentResolver mContentResolver;
     private Context mContext;
     private Cursor mCursor;
-    private ArrayList<String> exerciseDates;
-    private ArrayList<Integer> pedometerSteps, dateIDs;
+    private ArrayList<String> exerciseDates, exerciseDetails;
+    private ArrayList<Integer> dateIDs;
 
     public ExerciseDiaryAdapter(ContentResolver mContentResolver, Context mContext) {
         super();
@@ -40,17 +40,17 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
         this.mContentResolver = mContentResolver;
         this.mContext = mContext;
         exerciseDates = new ArrayList<>();
-        pedometerSteps = new ArrayList<>();
+        exerciseDetails = new ArrayList<>();
         dateIDs = new ArrayList<>();
 
-        mCursor = mContentResolver.query(PedometerContract.URI_TABLE,null,null,null,
-                PedometerContract.Columns._ID + " DESC");
+        mCursor = mContentResolver.query(ExerciseContract.URI_TABLE,null,null,null,
+                ExerciseContract.Columns._ID + " DESC");
 
         if(mCursor.moveToFirst()) {
             do {
-                exerciseDates.add(mCursor.getString(mCursor.getColumnIndex(PedometerContract.Columns.DATE)));
-                pedometerSteps.add(mCursor.getInt(mCursor.getColumnIndex(PedometerContract.Columns.STEPS)));
-                dateIDs.add(mCursor.getInt(mCursor.getColumnIndex(PedometerContract.Columns._ID)));
+                exerciseDates.add(mCursor.getString(mCursor.getColumnIndex(ExerciseContract.Columns.DATE)));
+                exerciseDetails.add(mCursor.getString(mCursor.getColumnIndex(ExerciseContract.Columns.EXERCISE)));
+                dateIDs.add(mCursor.getInt(mCursor.getColumnIndex(ExerciseContract.Columns._ID)));
             } while(mCursor.moveToNext());
         }
     }
@@ -68,11 +68,11 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
         Log.d("TEST","TTT");
 
         final String date = exerciseDates.get(i);
-        final int steps = pedometerSteps.get(i);
+        final String details = exerciseDetails.get(i);
         final String id = dateIDs.get(i) + "";
 
         viewHolder.txtDate.setText(date);
-        viewHolder.txtSteps.setText(steps + " Steps");
+        viewHolder.txtExerciseDetails.setText(details);
 
         viewHolder.exerciseHolder.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
@@ -102,7 +102,7 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Uri uri = PedometerContract.Pedometer.buildPedometerUri(idF);
+                        Uri uri = ExerciseContract.Pedometer.buildPedometerUri(idF);
                         mContentResolver.delete(uri,null,null);
 
                         Toast.makeText(mContext.getApplicationContext(), "Day has been deleted", Toast.LENGTH_SHORT).show();
@@ -122,14 +122,14 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public CardView exerciseHolder;
-        public TextView txtDate, txtSteps;
+        public TextView txtDate, txtExerciseDetails;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             exerciseHolder = (CardView) itemView.findViewById(R.id.item_CardView);
             txtDate = (TextView) itemView.findViewById(R.id.pedometerDate);
-            txtSteps = (TextView) itemView.findViewById(R.id.pedometerSteps);
+            txtExerciseDetails = (TextView) itemView.findViewById(R.id.pedometerSteps);
         }
     }
 }

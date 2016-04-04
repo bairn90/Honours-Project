@@ -22,7 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.brianmsurgenor.honoursproject.DBContracts.PedometerContract;
+import com.brianmsurgenor.honoursproject.DBContracts.ExerciseContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.IStepService;
 import com.brianmsurgenor.honoursproject.IStepServiceCallback;
@@ -135,13 +135,13 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
         int month = c.get(Calendar.MONTH);
         month++;
         String date = c.get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + c.get(Calendar.YEAR);
-        String[] projection = {PedometerContract.Columns.STEPS};
-        String filter = PedometerContract.Columns.DATE + " = '" + date + "'";
+        String[] projection = {ExerciseContract.Columns.EXERCISE};
+        String filter = ExerciseContract.Columns.DATE + " = '" + date + "'";
 
-        mCursor = mContentResolver.query(PedometerContract.URI_TABLE,projection,filter,null,null);
+        mCursor = mContentResolver.query(ExerciseContract.URI_TABLE,projection,filter,null,null);
 
         if(mCursor.moveToFirst()) {
-            return mCursor.getInt(mCursor.getColumnIndex(PedometerContract.Columns.STEPS));
+            return mCursor.getInt(mCursor.getColumnIndex(ExerciseContract.Columns.EXERCISE));
         } else {
             return 0;
         }
@@ -153,19 +153,19 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
         int month = c.get(Calendar.MONTH);
         month++;
         String date = c.get(Calendar.DAY_OF_MONTH) + "/" + month + "/" + c.get(Calendar.YEAR);
-        String[] projection = {PedometerContract.Columns.DATE};
-        String filter = PedometerContract.Columns.DATE + " = '" + date + "'";
+        String[] projection = {ExerciseContract.Columns.DATE};
+        String filter = ExerciseContract.Columns.DATE + " = '" + date + "'";
 
-        mCursor = mContentResolver.query(PedometerContract.URI_TABLE,projection,filter,null,null);
+        mCursor = mContentResolver.query(ExerciseContract.URI_TABLE,projection,filter,null,null);
 
         ContentValues values = new ContentValues();
-        values.put(PedometerContract.Columns.STEPS, txtSteps.getText().toString());
+        values.put(ExerciseContract.Columns.EXERCISE, txtSteps.getText().toString() + " Steps");
 
         if(mCursor.moveToFirst()) {
-            mContentResolver.update(PedometerContract.URI_TABLE,values,filter,null);
+            mContentResolver.update(ExerciseContract.URI_TABLE,values,filter,null);
         } else {
-            values.put(PedometerContract.Columns.DATE, date);
-            Uri uri = mContentResolver.insert(PedometerContract.URI_TABLE, values);
+            values.put(ExerciseContract.Columns.DATE, date);
+            Uri uri = mContentResolver.insert(ExerciseContract.URI_TABLE, values);
             Toast.makeText(getActivity(), uri.toString() , Toast.LENGTH_SHORT).show();
         }
 

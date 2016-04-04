@@ -112,9 +112,8 @@ public class FoodDiaryAdapter extends RecyclerView.Adapter<FoodDiaryAdapter.View
         viewHolder.mealTypeTime.setText(type);
 
             for (int x = 0; x < listCategories.size(); x++) {
-                String cat = listCategories.get(x);
 
-                switch (cat) {
+                switch (listCategories.get(x)) {
                     case "green":
                         gCount++;
                         break;
@@ -131,6 +130,7 @@ public class FoodDiaryAdapter extends RecyclerView.Adapter<FoodDiaryAdapter.View
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(120, 120);
             layoutParams.setMargins(10, 10, 10, 10);
             if (gCount > 0) {
+
                 RelativeLayout greenDot = new RelativeLayout(mContext);
                 greenDot.setBackgroundResource(R.drawable.green);
                 greenDot.setGravity(Gravity.CENTER);

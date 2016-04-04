@@ -126,6 +126,18 @@ public class SetupUserActivity extends BaseActivity {
                         PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
                 break;
 
+            case R.drawable.turtle:
+                getPackageManager().setComponentEnabledSetting(
+                        new ComponentName("com.brianmsurgenor.honoursproject", "com.brianmsurgenor.honoursproject.Main.MainActivity-Turtle"),
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                break;
+
+            case R.drawable.cat:
+                getPackageManager().setComponentEnabledSetting(
+                        new ComponentName("com.brianmsurgenor.honoursproject", "com.brianmsurgenor.honoursproject.Main.MainActivity-Cat"),
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                break;
+
         }
 
     }

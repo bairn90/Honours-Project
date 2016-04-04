@@ -12,7 +12,7 @@ import android.text.TextUtils;
 
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
-import com.brianmsurgenor.honoursproject.DBContracts.PedometerContract;
+import com.brianmsurgenor.honoursproject.DBContracts.ExerciseContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 
@@ -68,7 +68,7 @@ public class DBProvider extends ContentProvider {
         matcher.addURI(authority, "meal", MEAL);
         matcher.addURI(authority, "meal/*", MEAL_ID);
 
-        authority = PedometerContract.CONTENT_AUTHORITY;
+        authority = ExerciseContract.CONTENT_AUTHORITY;
         matcher.addURI(authority, "pedometer", PEDOMETER);
         matcher.addURI(authority, "pedometer/*", PEDOMETER_ID);
 
@@ -117,9 +117,9 @@ public class DBProvider extends ContentProvider {
             case MEAL_ID:
                 return MealContract.Meal.CONTENT_ITEM_TYPE;
             case PEDOMETER:
-                return PedometerContract.Pedometer.CONTENT_TYPE;
+                return ExerciseContract.Pedometer.CONTENT_TYPE;
             case PEDOMETER_ID:
-                return PedometerContract.Pedometer.CONTENT_ITEM_TYPE;
+                return ExerciseContract.Pedometer.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
         }
@@ -178,11 +178,11 @@ public class DBProvider extends ContentProvider {
                 break;
 
             case PEDOMETER:
-                queryBuilder.setTables(AppDatabase.Tables.PEDOMETER);
+                queryBuilder.setTables(AppDatabase.Tables.EXERCISE);
                 break;
             case PEDOMETER_ID:
-                queryBuilder.setTables(AppDatabase.Tables.PEDOMETER);
-                String pedometerID = PedometerContract.Pedometer.getPedometerID(uri);
+                queryBuilder.setTables(AppDatabase.Tables.EXERCISE);
+                String pedometerID = ExerciseContract.Pedometer.getPedometerID(uri);
                 queryBuilder.appendWhere(BaseColumns._ID + "=" + pedometerID);
                 break;
 
@@ -219,8 +219,8 @@ public class DBProvider extends ContentProvider {
                 long mRecordID = db.insertOrThrow(AppDatabase.Tables.MEAL,null,values);
                 return MealContract.Meal.buildMealUri(String.valueOf(mRecordID));
             case PEDOMETER:
-                long pRecordID = db.insertOrThrow(AppDatabase.Tables.PEDOMETER,null,values);
-                return PedometerContract.Pedometer.buildPedometerUri(String.valueOf(pRecordID));
+                long pRecordID = db.insertOrThrow(AppDatabase.Tables.EXERCISE,null,values);
+                return ExerciseContract.Pedometer.buildPedometerUri(String.valueOf(pRecordID));
             default:
                 throw new IllegalArgumentException("Unknown uri " + uri);
         }
@@ -274,12 +274,12 @@ public class DBProvider extends ContentProvider {
                 return db.update(AppDatabase.Tables.MEAL, values, selectionCriteria, selectionArgs);
 
             case PEDOMETER:
-                return db.update(AppDatabase.Tables.PEDOMETER, values, selection, selectionArgs);
+                return db.update(AppDatabase.Tables.EXERCISE, values, selection, selectionArgs);
             case PEDOMETER_ID:
-                String pedometerID = PedometerContract.Pedometer.getPedometerID(uri);
+                String pedometerID = ExerciseContract.Pedometer.getPedometerID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + pedometerID
                         + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
-                return db.update(AppDatabase.Tables.PEDOMETER, values, selectionCriteria, selectionArgs);
+                return db.update(AppDatabase.Tables.EXERCISE, values, selectionCriteria, selectionArgs);
 
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
@@ -336,10 +336,10 @@ public class DBProvider extends ContentProvider {
                 return db.delete(AppDatabase.Tables.MEAL, selectionCriteria, selectionArgs);
 
             case PEDOMETER_ID:
-                String pedometerID = PedometerContract.Pedometer.getPedometerID(uri);
+                String pedometerID = ExerciseContract.Pedometer.getPedometerID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + pedometerID
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
-                return db.delete(AppDatabase.Tables.PEDOMETER, selectionCriteria, selectionArgs);
+                return db.delete(AppDatabase.Tables.EXERCISE, selectionCriteria, selectionArgs);
 
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);

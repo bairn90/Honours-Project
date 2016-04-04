@@ -28,7 +28,6 @@ import com.brianmsurgenor.honoursproject.Main.MainActivity;
 import com.brianmsurgenor.honoursproject.Pedometer.PedometerFragment;
 import com.brianmsurgenor.honoursproject.Pet.PetFragment;
 import com.brianmsurgenor.honoursproject.R;
-import com.brianmsurgenor.honoursproject.Settings.SettingsActivity;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -166,9 +165,6 @@ public class BaseActivity extends AppCompatActivity
                 break;
             case R.id.ColourReset:
                 resetColours();
-                break;
-            case R.id.Settings:
-                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 break;
             case R.id.Delete:
                 deleteDatabase();

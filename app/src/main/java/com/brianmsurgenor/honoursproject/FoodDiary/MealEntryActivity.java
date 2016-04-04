@@ -112,7 +112,7 @@ public class MealEntryActivity extends BaseActivity {
 
         switch (id) {
 
-            case R.id.saveMeal:
+            case R.id.save:
                 saveMeal();
                 break;
 

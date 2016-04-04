@@ -109,9 +109,8 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
         Cursor mCursor;
 
         String[] projection = {MealContract.Columns.MEAL_ITEM};
-        String selection = MealContract.Columns.MEAL_ID + " = " + mealID;
-
-        mCursor = mContentResolver.query(MealContract.URI_TABLE, projection , selection, null, null);
+        String where = MealContract.Columns.MEAL_ID + " = " + mealID;
+        mCursor = mContentResolver.query(MealContract.URI_TABLE, projection , where, null, null);
 
         if(mCursor.moveToFirst()) {
             do {

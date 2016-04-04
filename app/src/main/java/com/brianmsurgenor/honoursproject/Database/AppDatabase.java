@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
-import com.brianmsurgenor.honoursproject.DBContracts.PedometerContract;
+import com.brianmsurgenor.honoursproject.DBContracts.ExerciseContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.Trophy.Trophies;
@@ -35,7 +35,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         String MEAL_DATE = "meal_date";
         String MEAL = "meal";
         String TROPHIES = "trophies";
-        String PEDOMETER = "pedometer";
+        String EXERCISE = "pedometer";
     }
 
 
@@ -75,10 +75,10 @@ public class AppDatabase extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + MealContract.Columns.MEAL_ID + ") "
                 + "REFERENCES " + Tables.MEAL_DATE + "(" + MealDateContract.Columns._ID + ") )");
 
-        db.execSQL("CREATE TABLE " + Tables.PEDOMETER + "("
-                + PedometerContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + PedometerContract.Columns.DATE + " TEXT NOT NULL,"
-                + PedometerContract.Columns.STEPS + " INTEGER NOT NULL)");
+        db.execSQL("CREATE TABLE " + Tables.EXERCISE + "("
+                + ExerciseContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + ExerciseContract.Columns.DATE + " TEXT NOT NULL,"
+                + ExerciseContract.Columns.EXERCISE + " TEXT NOT NULL)");
 
         db.execSQL("CREATE TABLE " + Tables.TROPHIES + "("
                 + TrophyContract.Columns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -124,7 +124,7 @@ public class AppDatabase extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + Tables.MEAL_DATE);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.MEAL);
             db.execSQL("DROP TABLE IF EXISTS " + Tables.TROPHIES);
-            db.execSQL("DROP TABLE IF EXISTS " + Tables.PEDOMETER);
+            db.execSQL("DROP TABLE IF EXISTS " + Tables.EXERCISE);
             onCreate(db);
         }
     }

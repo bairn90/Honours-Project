@@ -68,7 +68,9 @@ public class StepService extends Service implements StepListener {
 
         powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "StepService");
-        if (!wakeLock.isHeld()) wakeLock.acquire();
+        if (!wakeLock.isHeld()) {
+            wakeLock.acquire();
+        }
 
         if (stepDetector == null) {
             stepDetector = StepDetector.getInstance();

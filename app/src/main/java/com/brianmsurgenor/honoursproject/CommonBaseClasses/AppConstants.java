@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class AppConstants {
     
     private ArrayList<Food> foods;
-    private ArrayList sports;
+    private ArrayList<ArrayList> sports;
     private final static String GREEN = "green";
     private final static String ORANGE = "orange";
     private final static String RED = "red";
@@ -49,6 +49,31 @@ public class AppConstants {
 
     public void setSports() {
 
+        ArrayList t = new ArrayList();
+
+        t.add("Football");
+        t.add(R.drawable.football);
+        sports.add(t);
+
+        t = new ArrayList();
+        t.add("Rugby");
+        t.add(R.drawable.rugby);
+        sports.add(t);
+
+        t = new ArrayList();
+        t.add("Running");
+        t.add(R.drawable.running);
+        sports.add(t);
+
+        t = new ArrayList();
+        t.add("Tennis");
+        t.add(R.drawable.tennis);
+        sports.add(t);
+
+        t = new ArrayList();
+        t.add("Skiing");
+        t.add(R.drawable.skiing);
+        sports.add(t);
     }
 
     public void setFoods() {

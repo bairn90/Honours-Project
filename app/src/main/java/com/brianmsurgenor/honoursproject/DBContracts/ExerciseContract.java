@@ -7,13 +7,13 @@ import android.provider.BaseColumns;
  * Created by Brian on 30/10/2015.
  * Contract class to prevent having to write numerous SQL statements all the time
  */
-public class PedometerContract {
+public class ExerciseContract {
 
     //Interface to get the column names to be used for any db queries
     public interface Columns {
         String _ID = "_id";
         String DATE = "date";
-        String STEPS = "steps";
+        String EXERCISE = "exercise";
     }
 
 

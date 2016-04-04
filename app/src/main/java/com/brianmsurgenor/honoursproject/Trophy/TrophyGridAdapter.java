@@ -34,9 +34,9 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
         mItems = new ArrayList<>();
         mContentResolver = contentResolver;
         mContext = context;
-        mCursor = mContentResolver.query(TrophyContract.URI_TABLE, null, null, null, null);
 
         Trophy trophy;
+        mCursor = mContentResolver.query(TrophyContract.URI_TABLE, null, null, null, null);
         if(mCursor.moveToFirst()) {
             do {
                 trophy = new Trophy();
