@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +39,7 @@ public class MealEntryActivity extends BaseActivity {
     private FoodPickerAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Spinner txtMealType;
+    private Spinner spinMealType;
     private TextView txtMealTime;
     private String mealType;
     private int mealTypeIndex;
@@ -59,7 +58,7 @@ public class MealEntryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         super.addContentView(R.layout.activity_meal_entry);
 
-        txtMealType = (Spinner) findViewById(R.id.mealType);
+        spinMealType = (Spinner) findViewById(R.id.mealType);
         txtMealTime = (TextView) findViewById(R.id.mealTime);
         formatting = new SimpleDateFormat("HH:mm");
 
@@ -69,24 +68,27 @@ public class MealEntryActivity extends BaseActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
 
+            //If the user wasn't sent to this screen via the notification then it must be to edit
             if (!extras.getBoolean("Notification")) {
                 mealID = extras.getInt(MealDateContract.Columns._ID);
                 mealTime = extras.getLong(MealDateContract.Columns.MEAL_TIME);
             }
 
+            //Get the type (lunch etc) and then assign that to the spinner
             mealType = extras.getString(MealDateContract.Columns.MEAL_TYPE);
-            for (int i = 1; i < txtMealType.getCount(); i++) {
-                if (txtMealType.getItemAtPosition(i).toString().equals(mealType)) {
+            for (int i = 1; i < spinMealType.getCount(); i++) {
+                if (spinMealType.getItemAtPosition(i).toString().equals(mealType)) {
                     mealTypeIndex = i;
                     break;
                 }
             }
-            txtMealType.setSelection(mealTypeIndex);
 
+            spinMealType.setSelection(mealTypeIndex);
             calendar.setTimeInMillis(mealTime);
         }
         txtMealTime.setText("" + formatting.format(calendar.getTime()));
 
+        //Setup the adapter to the recyclerview
         mContentResolver = getContentResolver();
         recyclerView = (RecyclerView) findViewById(R.id.food_picker_recycler_view);
         mLayoutManager = new GridLayoutManager(MealEntryActivity.this, 2);
@@ -98,6 +100,7 @@ public class MealEntryActivity extends BaseActivity {
         foodCategories = new ArrayList<>();
     }
 
+    //Depending on if a meal ID was passed inflate the relevant menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -132,11 +135,13 @@ public class MealEntryActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * Shows the time picker dialog when the user taps on the time text view
+     * @param v
+     */
     public void setMealTime(View v) {
 
         final Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
 
         TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -155,14 +160,19 @@ public class MealEntryActivity extends BaseActivity {
         timePicker.show();
     }
 
+    /**
+     * Called to update the meal
+     */
     private void updateMeal() {
 
-        if (!foodEaten.isEmpty() && !txtMealType.getSelectedItem().toString().equals("Meal")) {
+        if (!foodEaten.isEmpty() && !spinMealType.getSelectedItem().toString().equals("Meal")) {
 
             ContentValues values = new ContentValues();
+            //First delete all current foods in the db as some may have been unselected
             Uri uri = MealContract.Meal.buildMealUri(mealID + "");
             mContentResolver.delete(uri, null, null);
 
+            //Now insert the foods into the db
             for (int i = 0; i < foodEaten.size(); i++) {
                 values.put(MealContract.Columns.MEAL_ID, mealID);
                 values.put(MealContract.Columns.MEAL_ITEM, foodEaten.get(i));
@@ -170,8 +180,9 @@ public class MealEntryActivity extends BaseActivity {
                 mContentResolver.insert(MealContract.URI_TABLE, values);
             }
 
+            //Update the meal time and type
             values = new ContentValues();
-            values.put(MealDateContract.Columns.MEAL_TYPE, txtMealType.getSelectedItem().toString());
+            values.put(MealDateContract.Columns.MEAL_TYPE, spinMealType.getSelectedItem().toString());
             values.put(MealDateContract.Columns.MEAL_TIME, mealTime);
             String where = MealDateContract.Columns._ID + " = " + mealID;
 
@@ -190,6 +201,9 @@ public class MealEntryActivity extends BaseActivity {
 
     }
 
+    /**
+     * If the user has selected delete then ask them to confirm and delete the meal
+     */
     private void deleteMeal() {
 
         new AlertDialog.Builder(this)
@@ -200,9 +214,11 @@ public class MealEntryActivity extends BaseActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //First delete the foods from the meal
                         Uri uri = MealContract.Meal.buildMealUri(mealID + "");
                         mContentResolver.delete(uri, null, null);
 
+                        //Then delete the meal from the DB
                         uri = MealDateContract.MealDate.buildMealDateUri(mealID + "");
                         mContentResolver.delete(uri, null, null);
 
@@ -216,9 +232,13 @@ public class MealEntryActivity extends BaseActivity {
 
     }
 
+    /**
+     * Check whether or not the user has entered all the details and if they have call the
+     * saveMealData method to actually save to the db
+     */
     private void saveMeal() {
 
-        if (!foodEaten.isEmpty() && !txtMealType.getSelectedItem().toString().equals("Meal")) {
+        if (!foodEaten.isEmpty() && !spinMealType.getSelectedItem().toString().equals("Meal")) {
             saveMealData();
             Intent intent = new Intent(this, FoodDiaryActivity.class);
             intent.putExtra("green",green);
@@ -236,6 +256,9 @@ public class MealEntryActivity extends BaseActivity {
 
     }
 
+    /**
+     * Saves the meal data into the database
+     */
     private void saveMealData() {
 
         boolean greenTrophyCheck = true;
@@ -247,7 +270,7 @@ public class MealEntryActivity extends BaseActivity {
         ContentValues values = new ContentValues();
         values.put(MealDateContract.Columns.MEAL_DATE, date);
         values.put(MealDateContract.Columns.MEAL_TIME, mealTime);
-        values.put(MealDateContract.Columns.MEAL_TYPE, txtMealType.getSelectedItem().toString());
+        values.put(MealDateContract.Columns.MEAL_TYPE, spinMealType.getSelectedItem().toString());
 
         Uri returned = mContentResolver.insert(MealDateContract.URI_TABLE, values);
 
@@ -286,18 +309,18 @@ public class MealEntryActivity extends BaseActivity {
         }
 
         //Set up the next meal notification based on the meal that was just entered
-        switch (txtMealType.getSelectedItem().toString()) {
+        switch (spinMealType.getSelectedItem().toString()) {
 
             case "Breakfast":
-                getAndSetNextNotification("Lunch");
+                setNextNotif("Lunch");
                 break;
 
             case "Lunch":
-                getAndSetNextNotification("Dinner");
+                setNextNotif("Dinner");
                 break;
 
             case "Dinner":
-                getAndSetNextNotification("Breakfast");
+                setNextNotif("Breakfast");
                 break;
         }
 
@@ -329,7 +352,11 @@ public class MealEntryActivity extends BaseActivity {
 
     }
 
-    private void getAndSetNextNotification(String meal) {
+    /**
+     * Used to set the next notification for the next meal based on the avg time of past meals
+     * @param meal
+     */
+    private void setNextNotif(String meal) {
 
         long avgTime = 0;
         int count = 0;
@@ -341,24 +368,25 @@ public class MealEntryActivity extends BaseActivity {
         int month = c.get(Calendar.MONTH);
         int year = c.get(Calendar.YEAR);
 
+        //If the next meal is breakfast increment the day to set notification for tomorrow
         if (meal.equals("Breakfast")) {
             day++;
         }
 
 
+        //Get the past meal average
         if (mCursor.moveToFirst()) {
             do {
-//                avgTime += mCursor.getLong(mCursor.getColumnIndex(MealDateContract.Columns.MEAL_TIME));
                 c.setTimeInMillis(mCursor.getLong(mCursor.getColumnIndex(MealDateContract.Columns.MEAL_TIME)));
                 c.set(year, month, day);
                 avgTime += c.getTimeInMillis();
-                Log.d("Avg", "" + c.getTimeInMillis());
                 count++;
             } while (mCursor.moveToNext());
         }
 
         mCursor.close();
 
+        //If there were meals found in the db then set the next meal notif otherwise no point
         if (count != 0) {
             avgTime = avgTime / count;
             Intent intent = new Intent(this, MealNotifReceiver.class);
@@ -371,6 +399,10 @@ public class MealEntryActivity extends BaseActivity {
 
     }
 
+    /**
+     * Static method called from the adapter to add the food and category arrays or remove depending
+     * on what is recieved from the adapter
+     */
     public static void selectedFood(boolean selected, String selectedFood, String foodCategory) {
 
         if (selected) {

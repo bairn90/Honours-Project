@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Created by Brian on 30/10/2015.
  * Contract class to prevent having to write numerous SQL statements all the time
  */
 public class MealContract {

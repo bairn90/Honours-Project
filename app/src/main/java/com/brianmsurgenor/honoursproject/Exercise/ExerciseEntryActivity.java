@@ -22,6 +22,9 @@ import com.brianmsurgenor.honoursproject.R;
 
 import java.util.Calendar;
 
+/**
+ * Adapter used to fill the recycler view for to fill the exercise graphics
+ */
 public class ExerciseEntryActivity extends BaseActivity {
 
     private ExerciseEntryAdapter adapter;
@@ -104,19 +107,13 @@ public class ExerciseEntryActivity extends BaseActivity {
         };
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, dateListener,
-                year,++month,day);
+                year, ++month, day);
 
         datePickerDialog.show();
     }
 
-    public static void selectExercise(boolean selected, String selectedExercise) {
-
-        if(selected) {
-            savedExercise = selectedExercise;
-        } else {
-            savedExercise = "";
-        }
-
+    public static void selectExercise(String selectedExercise) {
+        savedExercise = selectedExercise;
     }
 
     private void saveExercise() {
@@ -124,7 +121,7 @@ public class ExerciseEntryActivity extends BaseActivity {
         String length = exerciseLength.getText().toString();
         String date = exerciseDate.getText().toString();
 
-        if(length.equals("Enter Time") || savedExercise.equals("")) {
+        if (length.equals("Enter Time") || savedExercise.equals("")) {
             Toast.makeText(ExerciseEntryActivity.this, "Please select an exercise and enter " +
                     "the length of time", Toast.LENGTH_SHORT).show();
             return;

@@ -17,7 +17,6 @@ import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 
 /**
- * Created by Brian on 30/10/2015.
  * Controls all the interactions with the database
  */
 public class DBProvider extends ContentProvider {
@@ -40,8 +39,8 @@ public class DBProvider extends ContentProvider {
     private static final int MEAL = 400;
     private static final int MEAL_ID = 401;
 
-    private static final int PEDOMETER = 500;
-    private static final int PEDOMETER_ID = 501;
+    private static final int EXERCISE = 500;
+    private static final int EXERCISE_ID = 501;
 
 
     /**
@@ -69,8 +68,8 @@ public class DBProvider extends ContentProvider {
         matcher.addURI(authority, "meal/*", MEAL_ID);
 
         authority = ExerciseContract.CONTENT_AUTHORITY;
-        matcher.addURI(authority, "pedometer", PEDOMETER);
-        matcher.addURI(authority, "pedometer/*", PEDOMETER_ID);
+        matcher.addURI(authority, "exercise", EXERCISE);
+        matcher.addURI(authority, "exercise/*", EXERCISE_ID);
 
         return matcher;
     }
@@ -116,9 +115,9 @@ public class DBProvider extends ContentProvider {
                 return MealContract.Meal.CONTENT_TYPE;
             case MEAL_ID:
                 return MealContract.Meal.CONTENT_ITEM_TYPE;
-            case PEDOMETER:
+            case EXERCISE:
                 return ExerciseContract.Pedometer.CONTENT_TYPE;
-            case PEDOMETER_ID:
+            case EXERCISE_ID:
                 return ExerciseContract.Pedometer.CONTENT_ITEM_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown uri: " + uri);
@@ -177,12 +176,12 @@ public class DBProvider extends ContentProvider {
                 queryBuilder.appendWhere(BaseColumns._ID + "=" + mealID);
                 break;
 
-            case PEDOMETER:
+            case EXERCISE:
                 queryBuilder.setTables(AppDatabase.Tables.EXERCISE);
                 break;
-            case PEDOMETER_ID:
+            case EXERCISE_ID:
                 queryBuilder.setTables(AppDatabase.Tables.EXERCISE);
-                String pedometerID = ExerciseContract.Pedometer.getPedometerID(uri);
+                String pedometerID = ExerciseContract.Pedometer.getExerciseID(uri);
                 queryBuilder.appendWhere(BaseColumns._ID + "=" + pedometerID);
                 break;
 
@@ -218,9 +217,9 @@ public class DBProvider extends ContentProvider {
             case MEAL:
                 long mRecordID = db.insertOrThrow(AppDatabase.Tables.MEAL,null,values);
                 return MealContract.Meal.buildMealUri(String.valueOf(mRecordID));
-            case PEDOMETER:
+            case EXERCISE:
                 long pRecordID = db.insertOrThrow(AppDatabase.Tables.EXERCISE,null,values);
-                return ExerciseContract.Pedometer.buildPedometerUri(String.valueOf(pRecordID));
+                return ExerciseContract.Pedometer.buildExerciseUri(String.valueOf(pRecordID));
             default:
                 throw new IllegalArgumentException("Unknown uri " + uri);
         }
@@ -273,10 +272,10 @@ public class DBProvider extends ContentProvider {
                         + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
                 return db.update(AppDatabase.Tables.MEAL, values, selectionCriteria, selectionArgs);
 
-            case PEDOMETER:
+            case EXERCISE:
                 return db.update(AppDatabase.Tables.EXERCISE, values, selection, selectionArgs);
-            case PEDOMETER_ID:
-                String pedometerID = ExerciseContract.Pedometer.getPedometerID(uri);
+            case EXERCISE_ID:
+                String pedometerID = ExerciseContract.Pedometer.getExerciseID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + pedometerID
                         + (!TextUtils.isEmpty(selection) ? "AND (" + selection + ")" : "");
                 return db.update(AppDatabase.Tables.EXERCISE, values, selectionCriteria, selectionArgs);
@@ -335,8 +334,8 @@ public class DBProvider extends ContentProvider {
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
                 return db.delete(AppDatabase.Tables.MEAL, selectionCriteria, selectionArgs);
 
-            case PEDOMETER_ID:
-                String pedometerID = ExerciseContract.Pedometer.getPedometerID(uri);
+            case EXERCISE_ID:
+                String pedometerID = ExerciseContract.Pedometer.getExerciseID(uri);
                 selectionCriteria = BaseColumns._ID + "=" + pedometerID
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : "");
                 return db.delete(AppDatabase.Tables.EXERCISE, selectionCriteria, selectionArgs);

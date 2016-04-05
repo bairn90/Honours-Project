@@ -10,14 +10,11 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
-import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.FirstTimeSetup.SetupUserActivity;
 import com.brianmsurgenor.honoursproject.FoodDiary.MealEntryActivity;
 import com.brianmsurgenor.honoursproject.R;
 import com.brianmsurgenor.honoursproject.Trophy.Trophies;
-
-import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
 
@@ -47,9 +44,13 @@ public class MainActivity extends BaseActivity {
          * else send to appropriate setup screen
          */
         if (check == 0) {
-            //Check if the user was sent here via nav bar and so send to appropriate tab
+            /*
+             * Check if the user was sent here via nav bar and so send to appropriate tab or
+             * if first start up
+             */
             Bundle tabData = getIntent().getExtras();
             if(tabData != null) {
+                //If first start up display welcome msg otherwise send to correct tab
                 if(tabData.getInt("first") == 1) {
                     AlertDialog.Builder firstOpen = new AlertDialog.Builder(this);
                     firstOpen.setMessage("Hi " + uName + "! This app will allow you to take care " +
@@ -108,23 +109,12 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Check whether any new trophies have been added to the database
+     */
     private void trophyChecker() {
-        int trophyCount = 0;
-        ArrayList<String> trophyNames = new ArrayList<>();
-        String[] projection = {TrophyContract.Columns.TROPHY_NAME};
-        mCursor = mContentResolver.query(TrophyContract.URI_TABLE,projection,null,null,null);
-        if(mCursor.moveToFirst()) {
-            do {
-                trophyNames.add(mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_NAME)));
-                trophyCount++;
-            } while(mCursor.moveToNext());
-        }
-
         Trophies trophies = new Trophies(getApplicationContext());
-        if(trophyCount != trophies.numberOfTrophies()) {
-            trophies.updateTrophiesDatabase(trophyNames);
-        }
-
+        trophies.updateTrophyCheck();
     }
 
     /**

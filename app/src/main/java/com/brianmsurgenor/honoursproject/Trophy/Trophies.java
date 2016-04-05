@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -15,10 +16,8 @@ import com.easyandroidanimations.library.Animation;
 import com.easyandroidanimations.library.SlideInUnderneathAnimation;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
- * Created by Brian on 09/11/2015.
  * Holds the details of the trophies that can be won
  * For new trophies to be added add the name and description to the interface
  * Then add to the arraylists in the constructor. DB updates all handled by checks in MainActivity
@@ -26,12 +25,12 @@ import java.util.LinkedList;
  */
 public class Trophies {
 
-    private LinkedList<String> trophyNames = new LinkedList<>();
-    private LinkedList<String> trophyDescriptions = new LinkedList<>();
+    private ArrayList<String> trophyNames = new ArrayList<>();
+    private ArrayList<String> trophyDescriptions = new ArrayList<>();
     private ContentResolver mContentResolver;
     private final Context mContext;
 
-    /*
+    /**
      * Used so that all classes that watch for a trophy being won can easily access
      */
     public interface TrophyDetails {
@@ -76,14 +75,51 @@ public class Trophies {
         return trophyNames.size();
     }
 
-    public LinkedList<String> getTrophyNames() {
+    public ArrayList<String> getTrophyNames() {
         return trophyNames;
     }
 
-    public LinkedList<String> getTrophyDescriptions() {
+    public ArrayList<String> getTrophyDescriptions() {
         return trophyDescriptions;
     }
 
+    /**
+     * Checks whether or not any new trophies have been added to the application and adds these to
+     * the database if there are new trophies
+     */
+    public void updateTrophyCheck() {
+
+        Cursor mCursor;
+        int trophyCount = 0;
+        ArrayList<String> trophyNames = new ArrayList<>();
+
+        /*
+         * Gets all the trophies saved in the database to be compared with the trophies
+         * held in this class
+         */
+        String[] projection = {TrophyContract.Columns.TROPHY_NAME};
+        mCursor = mContentResolver.query(TrophyContract.URI_TABLE,projection,null,null,null);
+        if(mCursor.moveToFirst()) {
+            do {
+                trophyNames.add(mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_NAME)));
+                trophyCount++;
+            } while(mCursor.moveToNext());
+        }
+
+        /*
+         * If the number of trophies in the database is different from the
+         * number in this class then update
+         */
+        if(trophyCount != numberOfTrophies()) {
+            updateTrophiesDatabase(trophyNames);
+        }
+
+    }
+
+    /**
+     * Updates the trophies in the database
+     * @param dbTrophyNames
+     */
     public void updateTrophiesDatabase(ArrayList dbTrophyNames) {
         ArrayList<String[]> toBeAdded = new ArrayList<>();
 
@@ -107,13 +143,18 @@ public class Trophies {
         }
     }
 
+    /**
+     * Called when a trophy has been won, awards the trophy and then passes the user to the next
+     * screen. Done this way to prevent the screen changing and cancelling the winnning alert
+     * @param trophyName the name of the trophy obtained from the interface in this class
+     * @param nextScreen the next screen the user should see after winning the trophy
+     */
     public void winTrophy(String trophyName, final Class nextScreen) {
 
         ContentValues values = new ContentValues();
         values.put(TrophyContract.Columns.ACHIEVED, 1);
 
         String where = TrophyContract.Columns.TROPHY_NAME + " = '" + trophyName + "'";
-
         mContentResolver.update(TrophyContract.URI_TABLE, values, where, null);
 
         ImageView image = new ImageView(mContext);

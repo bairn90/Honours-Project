@@ -1,7 +1,7 @@
 package com.brianmsurgenor.honoursproject.Trophy;
 
 /**
- * Created by Brian on 09/11/2015.
+ * Simple class used to hold the trophy details for the trophy adapter
  */
 public class Trophy {
 

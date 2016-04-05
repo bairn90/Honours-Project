@@ -9,7 +9,7 @@ import com.brianmsurgenor.honoursproject.Pet.PetFragment;
 import com.brianmsurgenor.honoursproject.Trophy.TrophyFragment;
 
 /**
- * Created by Brian on 01/11/2015.
+ * Simple tab adapter used by the main activity to fill the 3 tabs on the screen
  */
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {

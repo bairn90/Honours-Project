@@ -46,11 +46,13 @@ public class PetFragment extends Fragment {
         pet = (ImageView) view.findViewById(R.id.petView);
         feedMe = (FloatingActionButton) view.findViewById(R.id.feedMe);
 
-        String[] projection = {UserContract.Columns.PET_TYPE};
+        //Get the pet and the app colour from the database and set them up
+        String[] projection = {UserContract.Columns.PET_TYPE, UserContract.Columns.CUSTOM_COLOUR};
         mCursor = mContentResolver.query(UserContract.URI_TABLE,projection,null,null,null);
 
         if(mCursor.moveToFirst()) {
             pet.setImageResource(mCursor.getInt(mCursor.getColumnIndex(UserContract.Columns.PET_TYPE)));
+            customColour = mCursor.getInt(mCursor.getColumnIndex(UserContract.Columns.CUSTOM_COLOUR));
         }
 
         if(customColour != 0) {
@@ -64,6 +66,10 @@ public class PetFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        /*
+         * Play a random pet animation after waiting 1 second in order to prevent the animation
+         * playing while the screen is still in the middle of being drawn
+         */
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -103,6 +109,11 @@ public class PetFragment extends Fragment {
 
     }
 
+    /**
+     * Method used to change the floating action button colour either when the user changes it or
+     * when the app is launched and the colour retrieved from the database
+     * @param colour the new app color
+     */
     public static void colourChange(int colour) {
         customColour = colour;
         feedMe.setBackgroundTintList(ColorStateList.valueOf(colour));

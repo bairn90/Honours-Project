@@ -1,6 +1,5 @@
 package com.brianmsurgenor.honoursproject.FirstTimeSetup;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
@@ -16,28 +15,27 @@ import com.easyandroidanimations.library.Animation;
 import com.easyandroidanimations.library.BounceAnimation;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by Brian on 09/12/2015.
+ * Adapter to be used by the recyclerView in order to fill the view with the pet graphics
  */
-public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdapter.ViewHolder> {
+public class PetPickerAdapter extends RecyclerView.Adapter<PetPickerAdapter.ViewHolder> {
 
-    private List<Integer> mItems;
-    private List<LinearLayout> backgroundList;
-    private Context mContext;
+    private ArrayList<Integer> petGraphics; //holds pet graphics
+    private ArrayList<LinearLayout> backgroundList; //used to loop through the pet layouts
+    private Context mContext; // used to get the resources in order to change pet background colour
 
-    public PetPickerGridAdapter(ContentResolver contentResolver, Context context) {
+    public PetPickerAdapter(Context context) {
         super();
-        mItems = new ArrayList<>();
+        petGraphics = new ArrayList<>();
         backgroundList = new ArrayList<>();
         mContext = context;
 
-        //Add items to mItems
-        mItems.add(R.drawable.frog);
-        mItems.add(R.drawable.puppy);
-        mItems.add(R.drawable.cat);
-        mItems.add(R.drawable.turtle);
+        //Add the pet graphics to be used by the onBindViewHolder to fill the layouts
+        petGraphics.add(R.drawable.frog);
+        petGraphics.add(R.drawable.puppy);
+        petGraphics.add(R.drawable.cat);
+        petGraphics.add(R.drawable.turtle);
 
     }
 
@@ -51,16 +49,22 @@ public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdap
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
 
-        final int id = mItems.get(i);
+        final int id = petGraphics.get(i);
         viewHolder.imgThumbnail.setImageResource(id);
         backgroundList.add(viewHolder.petBackground);
 
+        //on click listener to mark the pet as selected and pass this info back to the setupActivity
         viewHolder.petHolder.setOnClickListener(new View.OnClickListener() {
             boolean selected = false;
 
             @Override
             public void onClick(View v) {
 
+                /*
+                 * If the item hasn't been selected then set it to selected and change colour
+                 * and pass pet graphic back to the activity, otherwise reset colour and pass 0 back
+                 * to cancel any previous selections
+                 */
                 if(!selected){
                     selected = true;
                     unselectAll();
@@ -83,18 +87,21 @@ public class PetPickerGridAdapter extends RecyclerView.Adapter<PetPickerGridAdap
         });
     }
 
+    /**
+     * Loops through each pet background to change the colour to primary on a pet being deselected
+     */
     private void unselectAll() {
         for (LinearLayout l: backgroundList) {
             l.setBackgroundColor(mContext.getResources().getColor(R.color.primaryBackground));
         }
     }
 
-
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return petGraphics.size();
     }
 
+    //Viewholder used to define the view in which the pet graphic is held
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView imgThumbnail;

@@ -11,7 +11,7 @@ import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
 import com.brianmsurgenor.honoursproject.R;
 
 /**
- * Created by Brian on 29/02/2016.
+ * Reciever class for the meal notifications set up in the meal entry
  */
 public class MealNotifReceiver extends BroadcastReceiver {
 
@@ -22,6 +22,10 @@ public class MealNotifReceiver extends BroadcastReceiver {
 
         String meal = intent.getStringExtra(MealDateContract.Columns.MEAL_TYPE);
 
+        /*
+         * Set up the notification details to send the user to the meal entry screen on tapping the
+         * notification and build it
+         */
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent newIntent = new Intent(context, MealEntryActivity.class);
         newIntent.putExtra(MealDateContract.Columns.MEAL_TYPE, meal);

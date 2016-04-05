@@ -1,7 +1,7 @@
 package com.brianmsurgenor.honoursproject.FoodDiary;
 
 /**
- * Created by Brian on 09/03/2016.
+ * Simple class to hold the foods used in the food entry section
  */
 public class Food {
 

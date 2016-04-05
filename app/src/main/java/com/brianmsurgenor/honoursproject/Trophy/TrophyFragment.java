@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 
 import com.brianmsurgenor.honoursproject.R;
 
-
+/**
+ * Fragment used to show the trophies in the application. Hard work done in the trophyAdapter
+ */
 public class TrophyFragment extends Fragment {
 
     private RecyclerView.LayoutManager mLayoutManager;
@@ -29,8 +31,9 @@ public class TrophyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view =  inflater.inflate(R.layout.fragment_trophy, container, false);
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trophy_recycler_view);
-        final TrophyGridAdapter adapter = new TrophyGridAdapter(mContentResolver, getActivity());
+        final TrophyAdapter adapter = new TrophyAdapter(mContentResolver, getActivity());
 
+        //Assigns the trophy adapter to the recycler
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);

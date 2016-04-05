@@ -17,24 +17,24 @@ import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by Brian on 09/11/2015.
+ *
  */
-public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.ViewHolder> {
+public class TrophyAdapter extends RecyclerView.Adapter<TrophyAdapter.ViewHolder> {
 
-    private List<Trophy> mItems;
+    private ArrayList<Trophy> trophyList; //used to hold a list of all the trophies in the db
     private ContentResolver mContentResolver;
     private Cursor mCursor;
     private Context mContext;
 
-    public TrophyGridAdapter(ContentResolver contentResolver, Context context) {
+    public TrophyAdapter(ContentResolver contentResolver, Context context) {
         super();
-        mItems = new ArrayList<>();
+        trophyList = new ArrayList<>();
         mContentResolver = contentResolver;
         mContext = context;
 
+        //Get all trophies from the database and store the trophy objects in the trophyList
         Trophy trophy;
         mCursor = mContentResolver.query(TrophyContract.URI_TABLE, null, null, null, null);
         if(mCursor.moveToFirst()) {
@@ -44,7 +44,7 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
                 trophy.setName(mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_NAME)));
                 trophy.setDescription(mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_DESCRIPTION)));
                 trophy.setAchieved(mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns.ACHIEVED)));
-                mItems.add(trophy);
+                trophyList.add(trophy);
             } while (mCursor.moveToNext());
         }
 
@@ -59,9 +59,10 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-        final Trophy trophy = mItems.get(i);
+        final Trophy trophy = trophyList.get(i);
         viewHolder.trophyName.setText(trophy.getName());
 
+        //Depending whether or not the user has won the trophy populate the approprate graphic
         if(trophy.getAchieved() != 0) {
             viewHolder.imgThumbnail.setImageResource(R.drawable.ic_trophy_winner);
         } else {
@@ -69,6 +70,7 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
             viewHolder.imgThumbnail.setColorFilter(Color.argb(150, 200, 200, 200));
         }
 
+        //Set up an onclicklistener so that when the user clicks the trophy they are given a description
         viewHolder.trophyHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,9 +87,10 @@ public class TrophyGridAdapter extends RecyclerView.Adapter<TrophyGridAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return trophyList.size();
     }
 
+    //Viewholder used to define the view in which the trophy graphic is held
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView imgThumbnail;

@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,12 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.DBContracts.ExerciseContract;
+import com.brianmsurgenor.honoursproject.Main.MainActivity;
 import com.brianmsurgenor.honoursproject.R;
 
 import java.util.ArrayList;
 
 /**
- * Created by Brian on 18/02/2016.
+ * Adapter used to fill the recycler view for the diary
  */
 public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdapter.ViewHolder> {
 
@@ -46,6 +46,7 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
         mCursor = mContentResolver.query(ExerciseContract.URI_TABLE,null,null,null,
                 ExerciseContract.Columns._ID + " DESC");
 
+        //Get all of the users exercises from the database
         if(mCursor.moveToFirst()) {
             do {
                 exerciseDates.add(mCursor.getString(mCursor.getColumnIndex(ExerciseContract.Columns.DATE)));
@@ -63,9 +64,7 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-
-        Log.d("TEST","TTT");
+    public void onBindViewHolder(ViewHolder viewHolder, final int i) {
 
         final String date = exerciseDates.get(i);
         final String details = exerciseDetails.get(i);
@@ -74,6 +73,7 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
         viewHolder.txtDate.setText(date);
         viewHolder.txtExerciseDetails.setText(details);
 
+        //When the user long presses on the exercise card then present them with an option to delete
         viewHolder.exerciseHolder.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -81,7 +81,35 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
                 delete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        deletePedometer(id);
+                        /*
+                         * Pop up dialog used to check whether the user really wants to delete the entry
+                         * if yes then delete from the database and refresh the view
+                         */
+                        new AlertDialog.Builder(mContext)
+                                .setIcon(R.drawable.ic_warning_black_24dp)
+                                .setTitle("Delete Steps")
+                                .setMessage("Are you sure you want to delete this days exercise?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Uri uri = ExerciseContract.Pedometer.buildExerciseUri(id);
+                                        mContentResolver.delete(uri, null, null);
+                                        exerciseDates.remove(i);
+                                        //if it was the last item in the list return to main to avoid weird crash
+                                        if (!exerciseDates.isEmpty()) {
+                                            notifyItemRemoved(i);
+                                            notifyItemRangeChanged(i, getItemCount());
+                                        } else {
+                                            mContext.startActivity(new Intent(mContext, MainActivity.class));
+                                        }
+
+                                        Toast.makeText(mContext.getApplicationContext(), "Exercise has been deleted", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                })
+                                .setNegativeButton("No", null)
+                                .show();
                         return false;
                     }
                 });
@@ -90,35 +118,12 @@ public class ExerciseDiaryAdapter extends RecyclerView.Adapter<ExerciseDiaryAdap
 
     }
 
-    private void deletePedometer(String id) {
-
-        final String idF = id;
-
-        new AlertDialog.Builder(mContext)
-                .setIcon(R.drawable.ic_warning_black_24dp)
-                .setTitle("Delete Steps")
-                .setMessage("Are you sure you want to delete this days exercise?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Uri uri = ExerciseContract.Pedometer.buildPedometerUri(idF);
-                        mContentResolver.delete(uri,null,null);
-
-                        Toast.makeText(mContext.getApplicationContext(), "Day has been deleted", Toast.LENGTH_SHORT).show();
-                        mContext.startActivity(new Intent(mContext.getApplicationContext(), ExerciseDiaryActivity.class));
-                    }
-
-                })
-                .setNegativeButton("No", null)
-                .show();
-    }
-
     @Override
     public int getItemCount() {
         return exerciseDates.size();
     }
 
+    //Viewholder used to define the view in which the exercise graphic is held
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public CardView exerciseHolder;

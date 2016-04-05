@@ -47,9 +47,6 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
     private static final double inchesInMile = 63359.00;
     private static Trophies trophyWins;
 
-    /**
-     * Copied
-     */
     private static PowerManager powerManager = null;
     private static PowerManager.WakeLock wakeLock = null;
     public static IStepService mService = null;

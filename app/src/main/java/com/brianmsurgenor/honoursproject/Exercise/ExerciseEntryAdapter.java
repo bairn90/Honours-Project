@@ -22,16 +22,16 @@ import java.util.ArrayList;
 public class ExerciseEntryAdapter extends RecyclerView.Adapter<ExerciseEntryAdapter.ViewHolder>{
 
     private AppConstants appConstants;
-    private ArrayList<ArrayList> exercises;
-    private ArrayList<LinearLayout> backgroundList;
-    private Context mContext;
+    private ArrayList<ArrayList> exerciseGraphics;
+    private ArrayList<LinearLayout> backgroundList; //used to loop through the exercise layouts
+    private Context mContext; // used to get the resources in order to change background colour
 
     public ExerciseEntryAdapter(Context context) {
         super();
 
         backgroundList = new ArrayList<>();
         appConstants = new AppConstants();
-        exercises = appConstants.getSports();
+        exerciseGraphics = appConstants.getSports();
         mContext = context;
 
     }
@@ -46,35 +46,43 @@ public class ExerciseEntryAdapter extends RecyclerView.Adapter<ExerciseEntryAdap
     @Override
     public void onBindViewHolder(final ExerciseEntryAdapter.ViewHolder holder, int i) {
 
-        final String exercise = (String) exercises.get(i).get(0);
-        boolean selected = false;
+        final String exercise = (String) exerciseGraphics.get(i).get(0);
         backgroundList.add(holder.exerciseBackground);
 
-        holder.imgThumbnail.setImageResource((int) exercises.get(i).get(1));
+        holder.imgThumbnail.setImageResource((int) exerciseGraphics.get(i).get(1));
         holder.txtName.setText(exercise);
 
-        final boolean finalSelected = selected;
+        //on click listener to mark the exercise as selected and pass this info back to the entryActivity
         holder.exerciseHolder.setOnClickListener(new View.OnClickListener() {
-            boolean clickSelected = finalSelected;
+            boolean clickSelected = false;
 
             @Override
             public void onClick(View v) {
+
+                /*
+                 * If the item hasn't been selected then set it to selected and change colour
+                 * and pass the name back to the activity, otherwise reset colour and pass "" back
+                 * to cancel any previous selections
+                 */
                 if(!clickSelected) {
                     clickSelected = true;
                     unselectAll();
                     holder.exerciseBackground.setBackgroundColor(Color.YELLOW);
-                    ExerciseEntryActivity.selectExercise(true, exercise);
+                    ExerciseEntryActivity.selectExercise(exercise);
                 } else {
                     clickSelected = false;
                     holder.exerciseBackground.setBackgroundColor(mContext.getResources().
                             getColor(R.color.primaryBackground));
-                    ExerciseEntryActivity.selectExercise(false, exercise);
+                    ExerciseEntryActivity.selectExercise("");
                 }
             }
         });
 
     }
 
+    /**
+     * Loops through each exercise to change the colour to primary on a pet being deselected
+     */
     private void unselectAll() {
         for (LinearLayout l: backgroundList) {
             l.setBackgroundColor(mContext.getResources().getColor(R.color.primaryBackground));
@@ -83,9 +91,10 @@ public class ExerciseEntryAdapter extends RecyclerView.Adapter<ExerciseEntryAdap
 
     @Override
     public int getItemCount() {
-        return exercises.size();
+        return exerciseGraphics.size();
     }
 
+    //Viewholder used to define the view in which the exercise graphic is held
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView imgThumbnail;

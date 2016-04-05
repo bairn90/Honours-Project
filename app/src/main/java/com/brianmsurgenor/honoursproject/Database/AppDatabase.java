@@ -6,17 +6,16 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.brianmsurgenor.honoursproject.DBContracts.ExerciseContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
-import com.brianmsurgenor.honoursproject.DBContracts.ExerciseContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
 import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.Trophy.Trophies;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
- * Created by Brian on 30/10/2015.
  * Database class used by the provider to set up the database tables when the app first boots or
  * when the previous data has been deleted
  */
@@ -26,7 +25,7 @@ public class AppDatabase extends SQLiteOpenHelper {
     private static final String TAG = AppDatabase.class.getSimpleName();
     private static final String DATABASE_NAME = "health.db";
     private static final int DATABASE_VERSION = 2;
-    private LinkedList<String> trophyNames, trophyDescriptions;
+    private ArrayList<String> trophyNames, trophyDescriptions;
     private ContentResolver mContentResolver;
     private Context mContext;
 
@@ -35,7 +34,7 @@ public class AppDatabase extends SQLiteOpenHelper {
         String MEAL_DATE = "meal_date";
         String MEAL = "meal";
         String TROPHIES = "trophies";
-        String EXERCISE = "pedometer";
+        String EXERCISE = "exercise";
     }
 
 

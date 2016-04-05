@@ -21,13 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Brian on 27/01/2016.
+ * Adapter used to fill the recycler view for the food graphics
  */
 public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.ViewHolder> {
 
     private List<Food> foods;
     private List<String> loadedFoods;
-//    private List<Boolean> loadedFoodPicks;
     private List<LinearLayout> backgroundList;
     private Context mContext;
     private AppConstants appConstants;
@@ -39,12 +38,17 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
         appConstants = new AppConstants();
         foods = new ArrayList<>();
         loadedFoods = new ArrayList<>();
-//        loadedFoodPicks = new ArrayList<>();
         backgroundList = new ArrayList<>();
         mContext = context;
         this.mealID = mealID;
 
+        //get the food detals from the app constants
         foods = appConstants.getFoods();
+
+        /*
+         * if the mealID isn't 0 then i've been passed a mealID that is to be edited
+         * so load the foods from that meal
+         */
         if(mealID != 0) {
             loadFoods();
         }
@@ -82,9 +86,13 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
             }
         }
 
-        final boolean finalSelected = selected;
+        /*
+         * If the item hasn't been selected then set it to selected and change colour
+         * and pass food details back to the activity, otherwise reset colour and pass back false
+         * to remove
+         */
         viewHolder.foodHolder.setOnClickListener(new View.OnClickListener() {
-            boolean clickSelected = finalSelected;
+            boolean clickSelected = false;
 
             @Override
             public void onClick(View v) {
@@ -103,6 +111,9 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
 
     }
 
+    /**
+     * Loads foods from the database for the meal that is to be edited
+     */
     private void loadFoods() {
 
         ContentResolver mContentResolver = mContext.getContentResolver();
@@ -125,6 +136,7 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
         return foods.size();
     }
 
+    //Viewholder used to define the view in which the food graphic is held
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView imgThumbnail;

@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * stopping the power, notification, and sensor managers. It also passes
  * information received from the sensor to the StepDetector.
  *
- * This code is losely based on http://code.google.com/p/pedometer/
+ * This code is loosley based on http://code.google.com/p/pedometer/
  *
  * @author bagilevi <bagilevi@gmail.com>
  * @author Justin Wetherell <phishman3579@gmail.com>
@@ -50,7 +50,7 @@ public class StepService extends Service implements StepListener {
     private static NotificationManager notificatioManager = null;
     private static Notification notification = null;
     private static Intent passedIntent = null;
-    private static List<IStepServiceCallback> mCallbacks = new ArrayList<IStepServiceCallback>();;
+    private static ArrayList<IStepServiceCallback> mCallbacks = new ArrayList<>();
 
     private static int mSteps = 0;
     private static boolean running = false;
@@ -116,8 +116,6 @@ public class StepService extends Service implements StepListener {
         passedIntent = new Intent(getApplicationContext(), MainActivity.class);
         passedIntent.putExtra("tab", 1);
 
-        // Work around a bug where notif number has to be > 0
-//        updateNotification((mSteps > 0) ? mSteps : 1);
         updateNotification(mSteps);
         startForegroundCompat(NOTIFY, notification);
     }

@@ -1,17 +1,13 @@
 package com.brianmsurgenor.honoursproject.CommonBaseClasses;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.database.Cursor;
-
-import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.FoodDiary.Food;
 import com.brianmsurgenor.honoursproject.R;
 
 import java.util.ArrayList;
 
 /**
- * Created by Brian on 03/02/2016.
+ * This class is used to get the sports and foods used by the application and offer them to any
+ * class
  */
 public class AppConstants {
     
@@ -20,24 +16,6 @@ public class AppConstants {
     private final static String GREEN = "green";
     private final static String ORANGE = "orange";
     private final static String RED = "red";
-    private String userName;
-    private Cursor mCursor;
-    private ContentResolver mContentResolver;
-
-    public AppConstants(Context context) {
-
-        //Call to the second constructor
-        this();
-
-        String[] projection = {UserContract.Columns.USERNAME};
-        mContentResolver = context.getContentResolver();
-        mCursor = mContentResolver.query(UserContract.URI_TABLE, projection, null, null, null);
-
-        if(mCursor.moveToFirst()) {
-            userName = mCursor.getString(mCursor.getColumnIndex(UserContract.Columns.USERNAME));
-        }
-
-    }
 
     public AppConstants() {
         foods = new ArrayList();

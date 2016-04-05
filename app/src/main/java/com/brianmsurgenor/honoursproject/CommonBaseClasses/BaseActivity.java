@@ -1,10 +1,12 @@
 package com.brianmsurgenor.honoursproject.CommonBaseClasses;
 
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +35,6 @@ import com.brianmsurgenor.honoursproject.R;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 /**
- * Created by Brian on 30/10/2015.
  * Class to be inherited by all activities and used to set up the toolbar for the activity and the
  * navigation drawer if needed
  */
@@ -274,7 +276,7 @@ public class BaseActivity extends AppCompatActivity
      * Called when the user selects the delete database option from the nav bar.
      * Asks the user to confirm and deletes all data
      */
-    public void deleteDatabase() {
+    private void deleteDatabase() {
 
         new AlertDialog.Builder(this)
                 .setIcon(R.drawable.ic_warning_black_24dp)
@@ -285,6 +287,7 @@ public class BaseActivity extends AppCompatActivity
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        resetAppIcon();
                         mContentResolver.delete(UserContract.URI_TABLE, null, null);
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
@@ -292,6 +295,54 @@ public class BaseActivity extends AppCompatActivity
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    /**
+     * Used to reset the app icon back to the original after the user has deleted their data
+     */
+    private void resetAppIcon() {
+
+        int petType = 0;
+        String[] projection = {UserContract.Columns.PET_TYPE};
+        mCursor = mContentResolver.query(UserContract.URI_TABLE,projection,null,null,null);
+
+        if(mCursor.moveToFirst()) {
+            petType = mCursor.getInt(mCursor.getColumnIndex(UserContract.Columns.PET_TYPE));
+        }
+
+        Log.d("Pet", "" + petType);
+
+        getPackageManager().setComponentEnabledSetting(
+                new ComponentName("com.brianmsurgenor.honoursproject", "com.brianmsurgenor.honoursproject.Main.MainActivity-Original"),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+
+        switch (petType) {
+
+            case R.drawable.frog:
+                getPackageManager().setComponentEnabledSetting(
+                        new ComponentName("com.brianmsurgenor.honoursproject", "com.brianmsurgenor.honoursproject.Main.MainActivity-Frog"),
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                break;
+
+            case R.drawable.puppy:
+                getPackageManager().setComponentEnabledSetting(
+                        new ComponentName("com.brianmsurgenor.honoursproject", "com.brianmsurgenor.honoursproject.Main.MainActivity-Puppy"),
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                break;
+
+            case R.drawable.turtle:
+                getPackageManager().setComponentEnabledSetting(
+                        new ComponentName("com.brianmsurgenor.honoursproject", "com.brianmsurgenor.honoursproject.Main.MainActivity-Turtle"),
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                break;
+
+            case R.drawable.cat:
+                getPackageManager().setComponentEnabledSetting(
+                        new ComponentName("com.brianmsurgenor.honoursproject", "com.brianmsurgenor.honoursproject.Main.MainActivity-Cat"),
+                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                break;
+
+        }
     }
 
 }

@@ -23,12 +23,14 @@ public class ExerciseDiaryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         super.addContentView(R.layout.activity_exercise_diary);
 
+        //Sets the adapter up and assigns it to the recycler to display the diary on screen
         mContentResolver = getContentResolver();
         adapter = new ExerciseDiaryAdapter(mContentResolver, ExerciseDiaryActivity.this);
         recyclerView = (RecyclerView) findViewById(R.id.exercise_diary_recycler_view);
         mLayoutManager = new GridLayoutManager(ExerciseDiaryActivity.this, 1);
         recyclerView.setLayoutManager(mLayoutManager);
 
+        //If the adapter gets no items from the database then replace the view with a message
         if(adapter.getItemCount() == 0) {
             TextView t = new TextView(this);
             t.setText("No exercises have been logged");

@@ -3,7 +3,7 @@ package com.brianmsurgenor.honoursproject.FoodDiary;
 import java.util.ArrayList;
 
 /**
- * Created by Brian on 01/03/2016.
+ * Simple class used to hold the meals used by the food diary
  */
 public class Meal {
 

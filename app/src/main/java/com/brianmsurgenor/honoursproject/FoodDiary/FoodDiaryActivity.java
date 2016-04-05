@@ -23,8 +23,8 @@ public class FoodDiaryActivity extends BaseActivity {
     private FoodDiaryAdapter adapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ArrayList<String> gFeedback, rFeedback, oFeedback, foods;
-    private int green, orange, red;
+    private ArrayList<String> gFeedback, rFeedback, oFeedback, foods; // used for feedback method
+    private int green, orange, red; //used to get count of food categories
     private String uName, petName;
 
     @Override
@@ -44,6 +44,7 @@ public class FoodDiaryActivity extends BaseActivity {
         mLayoutManager = new GridLayoutManager(FoodDiaryActivity.this, 1);
         recyclerView.setLayoutManager(mLayoutManager);
 
+        //If passed her from the food entry screen then get the details of the meal entered for feedback
         Bundle args = getIntent().getExtras();
         if(args != null) {
             green = args.getInt("green");
@@ -52,6 +53,7 @@ public class FoodDiaryActivity extends BaseActivity {
             feedback();
         }
 
+        //If there are no entries in the diary then replace the recycler view with a message
         if(adapter.getItemCount() == 0) {
             TextView t = new TextView(this);
             t.setText("No meals have been entered. Your pet is hungry!");
@@ -63,6 +65,10 @@ public class FoodDiaryActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Used to build feedback, gets user and pet name from the database before calling createfeedback
+     * method
+     */
     private void feedback() {
 
         String[] projection = {UserContract.Columns.USERNAME, UserContract.Columns.PET_NAME, UserContract.Columns.PET_TYPE};
@@ -77,6 +83,7 @@ public class FoodDiaryActivity extends BaseActivity {
         }
 
         String feedback;
+        //Checks the type of feedback to be displayed based on the foods entered
         if(red > green & red > orange) {
             feedback = createFeedback("red");
         } else if(green > red && green > orange) {
@@ -86,6 +93,7 @@ public class FoodDiaryActivity extends BaseActivity {
         }
 
 
+        //Builds and shows the alert
         AlertDialog.Builder firstOpen = new AlertDialog.Builder(this);
         firstOpen.setMessage(feedback);
         AlertDialog alert = firstOpen.create();
@@ -95,11 +103,17 @@ public class FoodDiaryActivity extends BaseActivity {
 
     }
 
+    /**
+     * Creates the feedback from the feedback type arrays (gFeedback, rFeedback, oFeedback)
+     * generates random numbers and then based on this gets a feedback string from the arrays
+     * and returns
+     */
     private String createFeedback(String type) {
         Random random = new Random();
         int lower = 0;
         int upper = 2;
         int randomNum = random.nextInt(upper - lower) + lower;
+
         int upperFood = 5;
         int randomFood = random.nextInt(upperFood - lower) + lower;
 
@@ -120,6 +134,9 @@ public class FoodDiaryActivity extends BaseActivity {
 
     }
 
+    /**
+     * Generates the feedback strings into the arrays
+     */
     private void feedbackArrays() {
         gFeedback.add("Yum!! Thanks for keeping me healthy " + uName);
         gFeedback.add("Woo! I really enjoyed that " + uName + "!");
