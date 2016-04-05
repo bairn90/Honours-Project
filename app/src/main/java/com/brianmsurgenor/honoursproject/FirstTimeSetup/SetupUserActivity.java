@@ -86,19 +86,20 @@ public class SetupUserActivity extends BaseActivity {
 
     private void saveDetails() {
 
-
         ContentValues values = new ContentValues();
         values.put(UserContract.Columns.USERNAME, name);
         values.put(UserContract.Columns.PET_NAME, petName);
         values.put(UserContract.Columns.PET_TYPE, petType);
-        values.put(UserContract.Columns.CUSTOM_COLOUR,0);
+        values.put(UserContract.Columns.CUSTOM_COLOUR, 0);
 
         mContentResolver.insert(UserContract.URI_TABLE, values);
 
         changeAppIcon();
 
-        startActivity(new Intent(SetupUserActivity.this, MainActivity.class));
+        Intent intent = new Intent(SetupUserActivity.this, MainActivity.class);
+        intent.putExtra("first",1);
 
+        startActivity(intent);
     }
 
     @Override

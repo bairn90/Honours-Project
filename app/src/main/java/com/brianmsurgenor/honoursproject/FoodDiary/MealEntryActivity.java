@@ -47,6 +47,9 @@ public class MealEntryActivity extends BaseActivity {
     private static ArrayList<String> foodEaten;
     private static ArrayList<String> foodCategories;
     private int mealID = 0;
+    private int green = 0;
+    private int orange = 0;
+    private int red = 0;
     private long mealTime;
     private Calendar calendar;
     private SimpleDateFormat formatting;
@@ -217,7 +220,11 @@ public class MealEntryActivity extends BaseActivity {
 
         if (!foodEaten.isEmpty() && !txtMealType.getSelectedItem().toString().equals("Meal")) {
             saveMealData();
-            Toast.makeText(MealEntryActivity.this, "Meal saved!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, FoodDiaryActivity.class);
+            intent.putExtra("green",green);
+            intent.putExtra("orange",orange);
+            intent.putExtra("red",red);
+            startActivity(intent);
         } else {
             if (foodEaten.isEmpty()) {
                 Toast.makeText(MealEntryActivity.this, "You can't save a meal with no food!", Toast.LENGTH_LONG).show();
@@ -251,11 +258,27 @@ public class MealEntryActivity extends BaseActivity {
         //Insert foods
 
         for (int i = 0; i < foodEaten.size(); i++) {
+
             values = new ContentValues();
             values.put(MealContract.Columns.MEAL_ID, mealID);
             values.put(MealContract.Columns.MEAL_ITEM, foodEaten.get(i));
             values.put(MealContract.Columns.MEAL_CATEGORY, foodCategories.get(i));
             mContentResolver.insert(MealContract.URI_TABLE, values);
+
+            switch (foodCategories.get(i)) {
+
+                case "Green":
+                    green++;
+                    break;
+
+                case "Orange":
+                    orange++;
+                    break;
+
+                case "Red":
+                    red++;
+                    break;
+            }
 
             if (!foodCategories.equals("Green")) {
                 greenTrophyCheck = false;
@@ -301,7 +324,7 @@ public class MealEntryActivity extends BaseActivity {
             }
 
         } else {
-            startActivity(new Intent(this, MainActivity.class));
+
         }
 
     }

@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -63,35 +64,43 @@ public class PetFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-        Random random = new Random();
-        int lower = 0;
-        int upper = 5;
-        int randomNum = random.nextInt(upper - lower) + lower;
+                Random random = new Random();
+                int lower = 0;
+                int upper = 5;
+                int randomNum = random.nextInt(upper - lower) + lower;
 
-        switch (randomNum) {
-            case 0: new BounceAnimation(pet).animate();
-                break;
 
-            case 1: new SlideInAnimation(pet)
-                    .setDirection(Animation.DIRECTION_UP)
-                    .animate();
-                break;
+                switch (randomNum) {
+                    case 0: new BounceAnimation(pet).animate();
+                        break;
 
-            case 2: new ShakeAnimation(pet)
-                    .setNumOfShakes(5)
-                    .setDuration(Animation.DURATION_SHORT)
-                    .animate();
-                break;
+                    case 1: new SlideInAnimation(pet)
+                            .setDirection(Animation.DIRECTION_UP)
+                            .animate();
+                        break;
 
-            case 3: new FlipVerticalAnimation(pet).animate();
-                break;
+                    case 2: new ShakeAnimation(pet)
+                            .setNumOfShakes(5)
+                            .setDuration(Animation.DURATION_SHORT)
+                            .animate();
+                        break;
 
-            case 4: new RotationAnimation(pet)
-                    .setPivot(RotationAnimation.PIVOT_TOP_LEFT)
-                    .animate();
-                break;
-        }
+                    case 3: new FlipVerticalAnimation(pet).animate();
+                        break;
+
+                    case 4: new RotationAnimation(pet)
+                            .setPivot(RotationAnimation.PIVOT_TOP_LEFT)
+                            .animate();
+                        break;
+                }
+            }
+        }, 1000);
+
     }
 
     public static void colourChange(int colour) {

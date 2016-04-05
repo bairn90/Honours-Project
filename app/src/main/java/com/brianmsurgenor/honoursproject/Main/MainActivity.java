@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
@@ -23,7 +24,8 @@ public class MainActivity extends BaseActivity {
     private ContentResolver mContentResolver;
     private Cursor mCursor;
     private static TabLayout tabs;
-    private int customColour;
+    private int customColour, pet;
+    private String uName, petName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,22 @@ public class MainActivity extends BaseActivity {
             //Check if the user was sent here via nav bar and so send to appropriate tab
             Bundle tabData = getIntent().getExtras();
             if(tabData != null) {
-                pager.setCurrentItem(tabData.getInt("tab"));
+                if(tabData.getInt("first") == 1) {
+                    AlertDialog.Builder firstOpen = new AlertDialog.Builder(this);
+                    firstOpen.setMessage("Hi " + uName + "! This app will allow you to take care " +
+                            "of " + petName + " your new virtual pet! To feed your pet you simply " +
+                            "tell the what you've eaten, to exercise " + petName + " you do the same! " +
+                            "On this screen you'll find all the main functions of the application. " +
+                            "There are more features to be explored using the icon in the top left. " +
+                            "\n\nOH! Before you go, you also now have a new app icon found in " +
+                            "Android app drawer!" );
+                    AlertDialog alert = firstOpen.create();
+                    alert.setTitle("Welcome to health pet");
+                    alert.setIcon(pet);
+                    alert.show();
+                } else {
+                    pager.setCurrentItem(tabData.getInt("tab"));
+                }
             }
 
             //Run the colour check
@@ -82,6 +99,9 @@ public class MainActivity extends BaseActivity {
         if (mCursor.moveToFirst()) {
             //Setup has already been fully complete so check if they have changed the app colours
             customColour = mCursor.getInt(mCursor.getColumnIndex(UserContract.Columns.CUSTOM_COLOUR));
+            uName = mCursor.getString(mCursor.getColumnIndex(UserContract.Columns.USERNAME));
+            petName = mCursor.getString(mCursor.getColumnIndex(UserContract.Columns.PET_NAME));
+            pet = mCursor.getInt(mCursor.getColumnIndex(UserContract.Columns.PET_TYPE));
             return 0;
         } else {
             return 1;
@@ -108,7 +128,7 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     * Called when the user clicks the floating action button in the pet fragement.
+     * Called when the user clicks the floating action button in the pet fragment.
      * Send to the meal entry activity
      * @param v
      */
