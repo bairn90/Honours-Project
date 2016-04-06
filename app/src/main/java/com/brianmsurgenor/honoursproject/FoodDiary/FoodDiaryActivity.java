@@ -36,7 +36,6 @@ public class FoodDiaryActivity extends BaseActivity {
         rFeedback = new ArrayList<>();
         oFeedback = new ArrayList<>();
         foods = new ArrayList<>();
-        feedbackArrays();
 
         mContentResolver = getContentResolver();
         adapter = new FoodDiaryAdapter(mContentResolver, FoodDiaryActivity.this);
@@ -82,16 +81,17 @@ public class FoodDiaryActivity extends BaseActivity {
             pet = mCursor.getInt(mCursor.getColumnIndex(UserContract.Columns.PET_TYPE));
         }
 
+        feedbackArrays(); //create the arrays now that the username has been got
+
         String feedback;
         //Checks the type of feedback to be displayed based on the foods entered
-        if(red > green & red > orange) {
+        if(red > green && red >= orange) {
             feedback = createFeedback("red");
-        } else if(green > red && green > orange) {
+        } else if(green > red && green >= orange) {
             feedback = createFeedback("green");
         } else {
             feedback = createFeedback("orange");
         }
-
 
         //Builds and shows the alert
         AlertDialog.Builder firstOpen = new AlertDialog.Builder(this);
@@ -123,7 +123,7 @@ public class FoodDiaryActivity extends BaseActivity {
                 return rFeedback.get(randomNum) + foods.get(randomFood);
 
             case "orange":
-                return oFeedback.get(randomNum);
+                return oFeedback.get(randomNum) + foods.get(randomFood);
 
             case "green":
                 return gFeedback.get(randomNum);
@@ -150,12 +150,12 @@ public class FoodDiaryActivity extends BaseActivity {
         oFeedback.add("Yum! Thanks + " + uName + ". Maybe next time some ");
         oFeedback.add("Maybe there's still time for some ");
 
-        foods.add("Broccoli");
-        foods.add("Carrots");
-        foods.add("Apple");
-        foods.add("Orange");
-        foods.add("Pears");
-        foods.add("Mushrooms");
+        foods.add("broccoli.");
+        foods.add("carrots.");
+        foods.add("apple slices.");
+        foods.add("orange.");
+        foods.add("pears.");
+        foods.add("mushrooms.");
     }
 
 }

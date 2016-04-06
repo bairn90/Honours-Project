@@ -23,7 +23,7 @@ public class MainActivity extends BaseActivity {
     private static TabLayout tabs;
     private int customColour, pet;
     private String uName, petName;
-
+    private int first = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +52,7 @@ public class MainActivity extends BaseActivity {
             if(tabData != null) {
                 //If first start up display welcome msg otherwise send to correct tab
                 if(tabData.getInt("first") == 1) {
+                    first = 1;
                     AlertDialog.Builder firstOpen = new AlertDialog.Builder(this);
                     firstOpen.setMessage("Hi " + uName + "! This app will allow you to take care " +
                             "of " + petName + " your new virtual pet! To feed your pet you simply " +
@@ -126,5 +127,12 @@ public class MainActivity extends BaseActivity {
         startActivity(new Intent(MainActivity.this, MealEntryActivity.class));
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if(first != 1) {
+            super.onBackPressed();
+        } else {
+            return;
+        }
+    }
 }

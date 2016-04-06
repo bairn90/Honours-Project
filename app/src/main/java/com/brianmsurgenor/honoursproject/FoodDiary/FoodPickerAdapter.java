@@ -27,6 +27,7 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
 
     private List<Food> foods;
     private List<String> loadedFoods;
+    private List<Integer> selectedFood;
     private List<LinearLayout> backgroundList;
     private Context mContext;
     private AppConstants appConstants;
@@ -37,6 +38,7 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
 
         appConstants = new AppConstants();
         foods = new ArrayList<>();
+        selectedFood = new ArrayList<>();
         loadedFoods = new ArrayList<>();
         backgroundList = new ArrayList<>();
         mContext = context;
@@ -45,12 +47,25 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
         //get the food detals from the app constants
         foods = appConstants.getFoods();
 
+        for(int i=0; i<foods.size();i++) {
+            selectedFood.add(0);
+        }
+
         /*
          * if the mealID isn't 0 then i've been passed a mealID that is to be edited
          * so load the foods from that meal
          */
         if(mealID != 0) {
             loadFoods();
+            for(int i=0; i<foods.size();i++) {
+                String id = foods.get(i).getPicture() + "";
+                for (String food: loadedFoods) {
+                    if(id.equals(food)) {
+                        selectedFood.set(i,1);
+                        MealEntryActivity.selectedFood(true,id, foods.get(i).getCategory());
+                    }
+                }
+            }
         }
     }
 
@@ -62,28 +77,24 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
 
         final int id = foods.get(i).getPicture();
         final String foodCategory = foods.get(i).getCategory();
-        boolean selected = false;
         viewHolder.imgThumbnail.setImageResource(id);
         viewHolder.txtName.setText(foods.get(i).getName());
-        backgroundList.add(viewHolder.foodBackground);
+//        backgroundList.add(viewHolder.foodBackground);
 
         /*
          * To highlight the selected foods when user has come to this screen from the diary
          * selected food method called here but will only call when the user scroll and the item
          * appears on screen (need to move)
          */
-        if(mealID != 0) {
-            for (String food: loadedFoods) {
-                if(food.equals(id + "")) {
-                    viewHolder.foodBackground.setBackgroundColor(Color.YELLOW);
-                    selected = true;
-                    MealEntryActivity.selectedFood(true, "" + id, foodCategory);
-                }
-            }
+        if (selectedFood.get(i) == 1) {
+            viewHolder.foodBackground.setBackgroundColor(Color.YELLOW);
+        } else {
+            viewHolder.foodBackground.setBackgroundColor(mContext.getResources().
+                    getColor(R.color.primaryBackground));
         }
 
         /*
@@ -92,16 +103,15 @@ public class FoodPickerAdapter extends RecyclerView.Adapter<FoodPickerAdapter.Vi
          * to remove
          */
         viewHolder.foodHolder.setOnClickListener(new View.OnClickListener() {
-            boolean clickSelected = false;
 
             @Override
             public void onClick(View v) {
-                if(!clickSelected) {
-                    clickSelected = true;
+                if(selectedFood.get(i) == 0) {
+                    selectedFood.set(i, 1);
                     viewHolder.foodBackground.setBackgroundColor(Color.YELLOW);
                     MealEntryActivity.selectedFood(true,"" + id, foodCategory);
                 } else {
-                    clickSelected = false;
+                    selectedFood.set(i, 0);
                     viewHolder.foodBackground.setBackgroundColor(mContext.getResources().
                             getColor(R.color.primaryBackground));
                     MealEntryActivity.selectedFood(false, "" + id, foodCategory);

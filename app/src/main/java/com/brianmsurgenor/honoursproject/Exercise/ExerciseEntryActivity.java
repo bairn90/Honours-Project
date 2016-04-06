@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -155,14 +156,10 @@ public class ExerciseEntryActivity extends BaseActivity {
         mContentResolver = getContentResolver();
         mContentResolver.insert(ExerciseContract.URI_TABLE, values);
 
-        int lengthNumber = Integer.parseInt(length.split(" ")[0]);
-        Toast.makeText(ExerciseEntryActivity.this, "" + lengthNumber, Toast.LENGTH_SHORT).show();
-        return;
-
-//        if(!trophyCheck()) {
-//            Toast.makeText(ExerciseEntryActivity.this, "Exercise saved!", Toast.LENGTH_SHORT).show();
-//            startActivity(new Intent(ExerciseEntryActivity.this, ExerciseDiaryActivity.class));
-//        }
+        if(!trophyCheck()) {
+            Toast.makeText(ExerciseEntryActivity.this, "Exercise saved!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(ExerciseEntryActivity.this, ExerciseDiaryActivity.class));
+        }
 
     }
 
@@ -192,32 +189,33 @@ public class ExerciseEntryActivity extends BaseActivity {
             }
         }
 
+        Intent intent = new Intent(this,ExerciseDiaryActivity.class);
         if(exerciseCount == 1) {
             switch (savedExercise) {
                 case "Football":
-                    trophies.winTrophy(Trophies.TrophyDetails.firstFootball[0],ExerciseDiaryActivity.class);
+                    trophies.winTrophy(Trophies.TrophyDetails.firstFootball[0],intent);
                     return true;
 
                 case "Rugby":
-                    trophies.winTrophy(Trophies.TrophyDetails.firstRugby[0],ExerciseDiaryActivity.class);
+                    trophies.winTrophy(Trophies.TrophyDetails.firstRugby[0],intent);
                     return true;
 
                 case "Running":
-                    trophies.winTrophy(Trophies.TrophyDetails.firstRun[0],ExerciseDiaryActivity.class);
+                    trophies.winTrophy(Trophies.TrophyDetails.firstRun[0],intent);
                     return true;
 
                 case "Skiing":
-                    trophies.winTrophy(Trophies.TrophyDetails.firstSki[0],ExerciseDiaryActivity.class);
+                    trophies.winTrophy(Trophies.TrophyDetails.firstSki[0],intent);
                     return true;
 
                 case "Tennis":
-                    trophies.winTrophy(Trophies.TrophyDetails.firstTennis[0],ExerciseDiaryActivity.class);
+                    trophies.winTrophy(Trophies.TrophyDetails.firstTennis[0],intent);
                     return true;
             }
         } else {
             int lengthNumber = Integer.parseInt(length.split(" ")[0]);
             if(lengthNumber > 0 && savedExercise.equals("Football")) {
-                trophies.winTrophy(Trophies.TrophyDetails.hourFootball[0],ExerciseDiaryActivity.class);
+                trophies.winTrophy(Trophies.TrophyDetails.hourFootball[0],intent);
                 return true;
             }
         }

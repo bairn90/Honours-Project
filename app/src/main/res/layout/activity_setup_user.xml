@@ -29,6 +29,7 @@
                 android:layout_height="45dp"
                 android:layout_margin="10dp"
                 android:hint="Your Name"
+                android:inputType="textCapSentences"
                 android:singleLine="true"
                 android:textSize="20sp" />
 
@@ -38,6 +39,7 @@
                 android:layout_height="45dp"
                 android:layout_margin="10dp"
                 android:hint="Pet Name"
+                android:inputType="textCapSentences"
                 android:singleLine="true"
                 android:textSize="20sp" />
 

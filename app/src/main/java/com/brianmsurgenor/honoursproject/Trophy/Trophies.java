@@ -160,9 +160,9 @@ public class Trophies {
      * Called when a trophy has been won, awards the trophy and then passes the user to the next
      * screen. Done this way to prevent the screen changing and cancelling the winnning alert
      * @param trophyName the name of the trophy obtained from the interface in this class
-     * @param nextScreen the next screen the user should see after winning the trophy
+     * @param nextScreen the next screen the user should see after winning the trophy null if no change
      */
-    public void winTrophy(String trophyName, final Class nextScreen) {
+    public void winTrophy(String trophyName, final Intent nextScreen) {
 
         ContentValues values = new ContentValues();
         values.put(TrophyContract.Columns.ACHIEVED, 1);
@@ -182,7 +182,7 @@ public class Trophies {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 if (nextScreen != null) {
-                                    mContext.startActivity(new Intent(mContext, nextScreen));
+                                    mContext.startActivity(nextScreen);
                                 }
                             }
                         });

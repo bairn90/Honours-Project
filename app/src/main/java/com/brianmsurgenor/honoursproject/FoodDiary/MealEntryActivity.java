@@ -25,7 +25,6 @@ import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
 import com.brianmsurgenor.honoursproject.DBContracts.MealContract;
 import com.brianmsurgenor.honoursproject.DBContracts.MealDateContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
-import com.brianmsurgenor.honoursproject.Main.MainActivity;
 import com.brianmsurgenor.honoursproject.R;
 import com.brianmsurgenor.honoursproject.Trophy.Trophies;
 
@@ -88,6 +87,9 @@ public class MealEntryActivity extends BaseActivity {
         }
         txtMealTime.setText("" + formatting.format(calendar.getTime()));
 
+        foodEaten = new ArrayList<>();
+        foodCategories = new ArrayList<>();
+
         //Setup the adapter to the recyclerview
         mContentResolver = getContentResolver();
         recyclerView = (RecyclerView) findViewById(R.id.food_picker_recycler_view);
@@ -96,8 +98,6 @@ public class MealEntryActivity extends BaseActivity {
         adapter = new FoodPickerAdapter(MealEntryActivity.this, mealID);
         recyclerView.setAdapter(adapter);
 
-        foodEaten = new ArrayList<>();
-        foodCategories = new ArrayList<>();
     }
 
     //Depending on if a meal ID was passed inflate the relevant menu
@@ -240,11 +240,6 @@ public class MealEntryActivity extends BaseActivity {
 
         if (!foodEaten.isEmpty() && !spinMealType.getSelectedItem().toString().equals("Meal")) {
             saveMealData();
-            Intent intent = new Intent(this, FoodDiaryActivity.class);
-            intent.putExtra("green",green);
-            intent.putExtra("orange",orange);
-            intent.putExtra("red",red);
-            startActivity(intent);
         } else {
             if (foodEaten.isEmpty()) {
                 Toast.makeText(MealEntryActivity.this, "You can't save a meal with no food!", Toast.LENGTH_LONG).show();
@@ -290,20 +285,21 @@ public class MealEntryActivity extends BaseActivity {
 
             switch (foodCategories.get(i)) {
 
-                case "Green":
+                case "green":
                     green++;
                     break;
 
-                case "Orange":
+                case "orange":
                     orange++;
                     break;
 
-                case "Red":
+                case "red":
                     red++;
                     break;
+
             }
 
-            if (!foodCategories.equals("Green")) {
+            if (!foodCategories.equals("green")) {
                 greenTrophyCheck = false;
             }
         }
@@ -330,25 +326,31 @@ public class MealEntryActivity extends BaseActivity {
         String where = TrophyContract.Columns.TROPHY_NAME + " = '" + Trophies.TrophyDetails.firstMeal[0] + "' OR " +
                 TrophyContract.Columns.TROPHY_NAME + " = '" + Trophies.TrophyDetails.greenMeal[0] + "'";
         Cursor mCursor = mContentResolver.query(TrophyContract.URI_TABLE, projection, where, null, null);
+        Intent intent = new Intent(this, FoodDiaryActivity.class);
+        intent.putExtra("green",green);
+        intent.putExtra("orange",orange);
+        intent.putExtra("red",red);
 
         if (mCursor.moveToFirst()) {
             if (mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns.ACHIEVED)) == 0) {
                 temp = mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_NAME));
 
-                trophies.winTrophy(temp, MainActivity.class);
+                trophies.winTrophy(temp, intent);
+                return;
             }
 
             if(greenTrophyCheck) {
                 mCursor.moveToNext();
                 if (mCursor.getInt(mCursor.getColumnIndex(TrophyContract.Columns.ACHIEVED)) == 0) {
                     temp = mCursor.getString(mCursor.getColumnIndex(TrophyContract.Columns.TROPHY_NAME));
-                    trophies.winTrophy(temp, MainActivity.class);
+                    trophies.winTrophy(temp, intent);
+                    return;
                 }
             }
 
-        } else {
-
         }
+
+        startActivity(intent);
 
     }
 
