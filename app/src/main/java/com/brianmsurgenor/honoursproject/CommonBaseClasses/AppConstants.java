@@ -69,15 +69,58 @@ public class AppConstants {
         foods.add(food);
 
         food = new Food();
-        food.setPicture(R.drawable.bacon);
-        food.setName("Bacon");
-        food.setCategory(RED);
+        food.setPicture(R.drawable.milk);
+        food.setName("Milk");
+        food.setCategory(GREEN);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.fruit_juice);
+        food.setName("Fruit Juice");
+        food.setCategory(GREEN);
+        foods.add(food);
+
+
+        food = new Food();
+        food.setPicture(R.drawable.coffee);
+        food.setName("Tea/Coffee");
+        food.setCategory(ORANGE);
         foods.add(food);
 
         food = new Food();
         food.setPicture(R.drawable.fruit);
         food.setName("Fruit");
         food.setCategory(GREEN);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.vegetables);
+        food.setName("Vegetables");
+        food.setCategory(GREEN);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.bread);
+        food.setName("Bread");
+        food.setCategory(ORANGE);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.red_meat);
+        food.setName("Red Meat");
+        food.setCategory(ORANGE);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.white_meat);
+        food.setName("White Meat");
+        food.setCategory(ORANGE);
+        foods.add(food);
+
+        food = new Food();
+        food.setPicture(R.drawable.bacon);
+        food.setName("Bacon");
+        food.setCategory(RED);
         foods.add(food);
 
         food = new Food();

@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.brianmsurgenor.honoursproject.DBContracts.ExerciseContract;
 import com.brianmsurgenor.honoursproject.DBContracts.TrophyContract;
+import com.brianmsurgenor.honoursproject.DBContracts.UserContract;
 import com.brianmsurgenor.honoursproject.IStepService;
 import com.brianmsurgenor.honoursproject.IStepServiceCallback;
 import com.brianmsurgenor.honoursproject.R;
@@ -86,6 +87,11 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
 
         startStop = (Button) view.findViewById(R.id.startStopPedometer);
         startStop.setOnClickListener(this);
+
+        mCursor = mContentResolver.query(UserContract.URI_TABLE, null, null, null, null);
+        if(mCursor.moveToFirst()) {
+            customColour = mCursor.getInt(mCursor.getColumnIndex(UserContract.Columns.CUSTOM_COLOUR));
+        }
 
         if(customColour != 0) {
             colourChange(customColour);
@@ -163,7 +169,6 @@ public class PedometerFragment extends Fragment implements View.OnClickListener 
         } else {
             values.put(ExerciseContract.Columns.DATE, date);
             Uri uri = mContentResolver.insert(ExerciseContract.URI_TABLE, values);
-            Toast.makeText(getActivity(), uri.toString() , Toast.LENGTH_SHORT).show();
         }
 
         //Check for trophy win

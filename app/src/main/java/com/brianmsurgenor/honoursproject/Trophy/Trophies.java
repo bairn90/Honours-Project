@@ -40,10 +40,12 @@ public class Trophies {
         String[] greenMeal = {"Green Meal", "Congrats! " +
                 "You've just fed your pet your first entirely healthy meal! Pets love eating healthy. It makes them very happy!"};
         String[] longWalk = {"Long Walk", "Walked a whole mile?! That's sure to be one tired, but very happy pet!"};
-        String[] firstSport = {"First Sport",""};
-        String[] y = {"",""};
-        String[] z = {"",""};
-        String[] a = {"",""};
+        String[] firstFootball = {"First Football","Congratulations you've tried a new sport for the first time!"};
+        String[] firstRugby = {"First Rugby","Congratulations you've tried a new sport for the first time!"};
+        String[] firstRun = {"First Run","Congratulations you've tried a new sport for the first time!"};
+        String[] firstSki = {"First Ski","Congratulations you've tried a new sport for the first time!"};
+        String[] firstTennis = {"First Tennis","Congratulations you've tried a new sport for the first time!"};
+        String[] hourFootball = {"Hour of Football","Nice! A whole hour! You'll be a pro in no time!"};
     }
 
     public Trophies(Context context) {
@@ -63,12 +65,23 @@ public class Trophies {
         trophyNames.add(TrophyDetails.longWalk[0]);
         trophyDescriptions.add(TrophyDetails.longWalk[1]);
 
-        trophyNames.add(TrophyDetails.y[0]);
-        trophyDescriptions.add(TrophyDetails.y[1]);
+        trophyNames.add(TrophyDetails.firstFootball[0]);
+        trophyDescriptions.add(TrophyDetails.firstFootball[1]);
 
-        trophyNames.add(TrophyDetails.y[0]);
-        trophyDescriptions.add(TrophyDetails.y[1]);
+        trophyNames.add(TrophyDetails.firstRugby[0]);
+        trophyDescriptions.add(TrophyDetails.firstRugby[1]);
 
+        trophyNames.add(TrophyDetails.firstRun[0]);
+        trophyDescriptions.add(TrophyDetails.firstRun[1]);
+
+        trophyNames.add(TrophyDetails.firstTennis[0]);
+        trophyDescriptions.add(TrophyDetails.firstTennis[1]);
+
+        trophyNames.add(TrophyDetails.firstSki[0]);
+        trophyDescriptions.add(TrophyDetails.firstSki[1]);
+
+        trophyNames.add(TrophyDetails.hourFootball[0]);
+        trophyDescriptions.add(TrophyDetails.hourFootball[1]);
     }
 
     public int numberOfTrophies() {

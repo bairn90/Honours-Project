@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity {
                     AlertDialog.Builder firstOpen = new AlertDialog.Builder(this);
                     firstOpen.setMessage("Hi " + uName + "! This app will allow you to take care " +
                             "of " + petName + " your new virtual pet! To feed your pet you simply " +
-                            "tell the what you've eaten, to exercise " + petName + " you do the same! " +
+                            "tell the app what you've eaten, to exercise " + petName + " you do the same! " +
                             "On this screen you'll find all the main functions of the application. " +
                             "There are more features to be explored using the icon in the top left. " +
                             "\n\nOH! Before you go, you also now have a new app icon found in " +

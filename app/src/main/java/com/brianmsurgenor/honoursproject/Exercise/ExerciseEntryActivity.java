@@ -4,7 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +19,9 @@ import android.widget.Toast;
 import com.brianmsurgenor.honoursproject.CommonBaseClasses.BaseActivity;
 import com.brianmsurgenor.honoursproject.DBContracts.ExerciseContract;
 import com.brianmsurgenor.honoursproject.R;
+import com.brianmsurgenor.honoursproject.Trophy.Trophies;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -33,6 +35,7 @@ public class ExerciseEntryActivity extends BaseActivity {
     private ContentResolver mContentResolver;
     private TextView exerciseLength, exerciseDate;
     private static String savedExercise = "";
+    private String length; //used to hold the exercise length string
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,10 @@ public class ExerciseEntryActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * Called when the user clicks on the the time text box in order to set the legnth of exercise
+     * @param view
+     */
     public void setLength(View view) {
 
         TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener() {
@@ -90,6 +97,11 @@ public class ExerciseEntryActivity extends BaseActivity {
         timePickerDialog.show();
     }
 
+    /**
+     * Called when the user clicks on the date textbox incase they want to change the date of e
+     * exercise
+     * @param view
+     */
     public void setDate(View view) {
 
         Calendar calendar = Calendar.getInstance();
@@ -112,13 +124,22 @@ public class ExerciseEntryActivity extends BaseActivity {
         datePickerDialog.show();
     }
 
+    /**
+     * Static method called from the adapter to pass back the exercise that the user has just
+     * selected/unselected
+     * @param selectedExercise
+     */
     public static void selectExercise(String selectedExercise) {
         savedExercise = selectedExercise;
     }
 
+    /**
+     * Called to check the user has entered all the necessary details and then saves the data into
+     * the db. Then makes call to the trophy check method
+     */
     private void saveExercise() {
 
-        String length = exerciseLength.getText().toString();
+        length  = exerciseLength.getText().toString();
         String date = exerciseDate.getText().toString();
 
         if (length.equals("Enter Time") || savedExercise.equals("")) {
@@ -132,12 +153,75 @@ public class ExerciseEntryActivity extends BaseActivity {
         values.put(ExerciseContract.Columns.DATE, date + " " + savedExercise);
 
         mContentResolver = getContentResolver();
-
         mContentResolver.insert(ExerciseContract.URI_TABLE, values);
 
-        Toast.makeText(ExerciseEntryActivity.this, "Exercise saved!", Toast.LENGTH_SHORT).show();
+        int lengthNumber = Integer.parseInt(length.split(" ")[0]);
+        Toast.makeText(ExerciseEntryActivity.this, "" + lengthNumber, Toast.LENGTH_SHORT).show();
+        return;
 
-        startActivity(new Intent(ExerciseEntryActivity.this, ExerciseDiaryActivity.class));
+//        if(!trophyCheck()) {
+//            Toast.makeText(ExerciseEntryActivity.this, "Exercise saved!", Toast.LENGTH_SHORT).show();
+//            startActivity(new Intent(ExerciseEntryActivity.this, ExerciseDiaryActivity.class));
+//        }
 
+    }
+
+    /**
+     * Called to check the db incase the user has won any trophies
+     */
+    private boolean trophyCheck() {
+
+        ArrayList<String> lengths, dates;
+        lengths = new ArrayList<>();
+        dates = new ArrayList<>();
+        String[] projection = {ExerciseContract.Columns.DATE, ExerciseContract.Columns.EXERCISE};
+        Cursor mCursor = mContentResolver.query(ExerciseContract.URI_TABLE, projection, null, null, null);
+        int exerciseCount = 0;
+        Trophies trophies = new Trophies(this);
+
+        if(mCursor.moveToFirst()){
+            do {
+                lengths.add(mCursor.getString(mCursor.getColumnIndex(ExerciseContract.Columns.EXERCISE)));
+                dates.add(mCursor.getString(mCursor.getColumnIndex(ExerciseContract.Columns.DATE)));
+            } while(mCursor.moveToNext());
+        }
+
+        for(String exercise : dates) {
+            if(exercise.contains(savedExercise)) {
+                exerciseCount++;
+            }
+        }
+
+        if(exerciseCount == 1) {
+            switch (savedExercise) {
+                case "Football":
+                    trophies.winTrophy(Trophies.TrophyDetails.firstFootball[0],ExerciseDiaryActivity.class);
+                    return true;
+
+                case "Rugby":
+                    trophies.winTrophy(Trophies.TrophyDetails.firstRugby[0],ExerciseDiaryActivity.class);
+                    return true;
+
+                case "Running":
+                    trophies.winTrophy(Trophies.TrophyDetails.firstRun[0],ExerciseDiaryActivity.class);
+                    return true;
+
+                case "Skiing":
+                    trophies.winTrophy(Trophies.TrophyDetails.firstSki[0],ExerciseDiaryActivity.class);
+                    return true;
+
+                case "Tennis":
+                    trophies.winTrophy(Trophies.TrophyDetails.firstTennis[0],ExerciseDiaryActivity.class);
+                    return true;
+            }
+        } else {
+            int lengthNumber = Integer.parseInt(length.split(" ")[0]);
+            if(lengthNumber > 0 && savedExercise.equals("Football")) {
+                trophies.winTrophy(Trophies.TrophyDetails.hourFootball[0],ExerciseDiaryActivity.class);
+                return true;
+            }
+        }
+
+        return false;
     }
 }
